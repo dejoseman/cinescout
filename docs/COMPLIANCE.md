@@ -5,7 +5,7 @@ Status legend: **PASS** verified in this repo - **ACTION** requires an operator 
 
 | # | Requirement | Status | Evidence / required action |
 |---|---|---|---|
-| 1 | New project created during the contest period | **ACTION** | Repository scaffolded from an empty directory on 2026-08-25 and `git init` run, but **no commit has been made yet**. Create the initial commit so the history itself evidences the creation date. |
+| 1 | New project created during the contest period | **PASS** | Repository created from an empty directory and committed on **2026-09-02** (commit `e811161`). The git history is the timeline evidence. |
 | 2 | Eligible platform / project category | **VERIFY** | Web application solving an entertainment/media workflow. Confirm against the official category list. |
 | 3 | Google Cloud AI usage at runtime | **PASS** | Gemini is invoked through ADK's `LlmAgent` in `backend/app/agents/pipeline.py` — six stages, each with a typed `output_schema`. No stage is stubbed. `scripts/verify_integrations.py` additionally issues a direct `google-genai` call. |
 | 4 | Gemini usage | **PASS** | `gemini-3.7-flash` (GA) default; `GEMINI_REASONING_MODEL` may raise heavy stages to `gemini-3.1-pro-preview`. |
