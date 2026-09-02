@@ -221,26 +221,45 @@ To use Vertex AI instead of an API key, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE` and
 
 ## Performance
 
-Measured end to end on the seeded Lagos brief, 2026-09-02:
+Measured end to end on the seeded Lagos brief, 2026-09-02, with a Gemini key
+still metered on free-tier quota:
 
-| Stage | Paid-tier | Free-tier key |
-|---|---:|---:|
-| Brief (plan research) | 7.7s | 7.7s |
-| Research (6 Parallel searches) | 4.3s | 4.3s |
-| Evidence (concurrent extraction) | **18.1s** | 105.1s |
-| Verification | 13.3s | 32.8s |
-| Risk | 15.6s | 15.6s |
-| Scoring (deterministic) | 0.0s | 0.0s |
-| Recommendations + report | ~30s | ~30s |
-| **Total** | **~75s** | **198s** |
+| Stage | Time |
+|---|---:|
+| Brief (plan research) | 8.6s |
+| Research (6 Parallel searches, 33 sources) | 7.5s |
+| Evidence (concurrent, per task) | 20.8s |
+| Verification | 19.7s |
+| Risk | ~16s |
+| Scoring (deterministic) | 0.0s |
+| Recommendations + report | ~30s |
+| **Projected total** | **~100s** |
 
-**The Gemini free tier allows 5 requests per minute per model.** A full run makes
-about eleven model calls, so a free-tier key is throttled: the same evidence stage
-measured 18.1s with quota available and 105.1s once rate-limited, with twelve 429s
-and six model failovers in a single run. **Enable billing before demoing.**
+Parallel is never the bottleneck: six searches returning 33 sources across 31
+domains complete in under eight seconds.
 
-Parallel is never the bottleneck - six searches returning 35 sources across 32
-domains complete in ~4 seconds.
+### Gemini quota is the constraint, not the pipeline
+
+Everything slow about a CineScout run traces back to model quota:
+
+- **Free tier is 5 requests/minute/model.** A run makes ~11 calls, so it is
+  throttled hard. A billing-enabled key was observed at 20/min - still the
+  `generate_content_free_tier_requests` metric.
+- **Transport retries must stay off.** The genai client's retries bypass the
+  pacer, so one paced request became several real ones. Enabling them produced
+  22 quota rejections and pushed a 131s run to 283s. With `attempts=1`, a paced
+  slot is exactly one request and quota rejections went to zero.
+- **Requests are paced** to `GEMINI_MAX_RPM` (default 18). Waiting for a slot is
+  cheaper than being rejected and retrying.
+- **Models fail over** (`GEMINI_FALLBACK_MODELS`) when one is capacity- or
+  quota-constrained. Observed: `gemini-3.7-flash` returning sustained 503s,
+  and later every call on `3.5-flash`/`3.6-flash` rejected while
+  `3.1-flash-lite` served the whole run from its separate quota.
+
+**If runs are slow or fail with quota errors**, check that your API key belongs
+to the project where billing is enabled - a key created in a different project
+stays on free-tier metering. Then either raise `GEMINI_MAX_RPM` or point
+`GEMINI_MODEL` at a model with available quota.
 
 ---
 

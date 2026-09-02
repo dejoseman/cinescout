@@ -136,3 +136,46 @@ def test_primary_is_reported_as_the_model_name():
 def test_empty_chain_is_rejected():
     with pytest.raises(ValueError):
         FallbackGemini([])
+
+
+# -- Request pacing ----------------------------------------------------------
+
+
+async def test_pacer_allows_a_burst_up_to_the_limit():
+    import time as _time
+
+    from app.agents.models import RequestPacer
+
+    pacer = RequestPacer(5)
+    start = _time.monotonic()
+    for _ in range(5):
+        await pacer.acquire()
+    assert _time.monotonic() - start < 0.5, "under the limit must not block"
+
+
+async def test_pacer_blocks_once_the_window_is_full(monkeypatch):
+    """A request beyond the per-minute window must wait for a slot."""
+    import app.agents.models as models
+
+    pacer = models.RequestPacer(2)
+    await pacer.acquire()
+    await pacer.acquire()
+
+    slept: list[float] = []
+
+    async def fake_sleep(seconds: float) -> None:
+        slept.append(seconds)
+        # Age the window out so the retry loop can terminate.
+        pacer._recent.clear()
+
+    monkeypatch.setattr(models.asyncio, "sleep", fake_sleep)
+    await pacer.acquire()
+
+    assert slept, "a full window must cause a wait rather than an immediate call"
+
+
+async def test_pacer_limit_is_at_least_one():
+    from app.agents.models import RequestPacer
+
+    assert RequestPacer(0).limit == 1
+    assert RequestPacer(-5).limit == 1

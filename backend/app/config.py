@@ -129,6 +129,10 @@ class Settings:
     #: Concurrent evidence-extraction calls. Keep at 3 on a free-tier Gemini key
     #: (5 requests/minute/model); raise to 6+ on a paid key for lower latency.
     evidence_concurrency: int = field(default_factory=lambda: _int("EVIDENCE_CONCURRENCY", 3))
+    #: Model requests per minute, paced in code to stay under the API quota.
+    #: Free tier is 5/min/model; a billing-enabled key was observed at 20/min.
+    #: Set just below the real ceiling: being paced is cheaper than being rejected.
+    gemini_max_rpm: int = field(default_factory=lambda: _int("GEMINI_MAX_RPM", 18))
 
     # -- API -------------------------------------------------------------------
     rate_limit_per_hour: int = field(default_factory=lambda: _int("RATE_LIMIT_PER_HOUR", 20))
