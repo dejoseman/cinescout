@@ -115,15 +115,42 @@ SOURCE CATALOGUE
 CLAIMS TO VERIFY
 {evidence_block}
 
-Assign exactly one status to every claim, using this scale:
-- VERIFIED: two or more independent sources (different domains) agree.
-- SUPPORTED: one credible source states it directly, nothing contradicts it.
+Judge source authority first. It determines the ceiling on any status:
+
+  TIER 1 - official: a government, regulator or authority site (.gov, .gov.ng,
+    civil aviation authority, immigration service, state film office), or the
+    named body's own publication.
+  TIER 2 - credible secondary: established news outlets, industry bodies,
+    professional production-service companies writing about their own market.
+  TIER 3 - weak: SEO aggregators, listicles, "drone laws by country" round-ups,
+    marketing pages, content farms, undated blog posts. These frequently
+    paraphrase regulations inaccurately or describe a different jurisdiction.
+
+Assign exactly one status to every claim:
+- VERIFIED: two or more independent sources (different domains) agree, AND at
+  least one is Tier 1 or Tier 2.
+- SUPPORTED: a single Tier 1 or Tier 2 source states it directly, uncontradicted.
 - CONFLICTING: sources disagree on the substance. Record both sides.
-- UNCONFIRMED: only a weak, indirect or commercial source supports it.
+- UNCONFIRMED: the claim rests only on Tier 3 sources, or the source describes a
+  different jurisdiction, or the claim is materially stronger than what the
+  excerpt actually says.
 - INSUFFICIENT_EVIDENCE: the excerpt does not actually support the claim.
 
 Rules:
 - Two pages on the same domain are NOT independent corroboration.
+- A regulatory claim sourced only from Tier 3 is UNCONFIRMED, however confident
+  the page sounds. This is the single most common way production research goes
+  wrong: a filmmaker reads an aggregator, believes a rule, and discovers on the
+  day that the real regulator says otherwise.
+- Check jurisdiction explicitly. A permit rule from a different country or a
+  national park service elsewhere does not support a claim about this production's
+  location. Mark those UNCONFIRMED and say so in the reasoning.
+- Look actively for tension between claims: differing fees, lead times, permit
+  authorities, or whether something is allowed at all. Two claims that cannot
+  both be true are CONFLICTING even when each has its own source.
+- Do not mark everything SUPPORTED. If a set of claims comes back uniformly
+  supported, you have not scrutinised source authority or jurisdiction closely
+  enough.
 - List corroborating and contradicting source ids explicitly, using catalogue ids only.
 - Set ``staleness_flag`` true when the claim depends on figures, fees, rules or
   conditions that change over time and the source is undated or clearly old.

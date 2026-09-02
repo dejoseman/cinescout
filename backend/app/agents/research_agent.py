@@ -77,6 +77,7 @@ class ResearchAgent(BaseAgent):
                     "sources": [],
                     "search_digest": "",
                     "source_catalog_block": "(no sources retrieved)",
+                    "task_digests": [],
                 },
             )
             return
@@ -228,6 +229,29 @@ class ResearchAgent(BaseAgent):
         digest = search_digest_block(grouped, settings.max_evidence_chars)
         catalog = source_catalog_block(sources)
 
+        # Per-task bundles for the evidence stage, which extracts each task
+        # concurrently and may only cite that task's own sources.
+        by_source_id = {s.id: s for s in sources}
+        per_task_budget = max(4000, settings.max_evidence_chars // max(1, len(grouped)))
+        task_digests = []
+        for task_id, category, question, entries in grouped:
+            task_source_ids = []
+            for source_id, _ in entries:
+                if source_id not in task_source_ids:
+                    task_source_ids.append(source_id)
+            task_digests.append({
+                "task_id": task_id,
+                "category": category,
+                "question": question,
+                "source_ids": task_source_ids,
+                "catalog_block": source_catalog_block(
+                    [by_source_id[i] for i in task_source_ids if i in by_source_id]
+                ),
+                "digest": search_digest_block(
+                    [(task_id, category, question, entries)], per_task_budget
+                ),
+            })
+
         self.emit(
             "stage_completed",
             stage="research",
@@ -245,6 +269,7 @@ class ResearchAgent(BaseAgent):
             "sources": [s.model_dump(mode="json") for s in sources],
             "search_digest": digest,
             "source_catalog_block": catalog,
+            "task_digests": task_digests,
         }
 
     @staticmethod

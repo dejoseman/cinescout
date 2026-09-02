@@ -87,6 +87,11 @@ class RunRecorder:
     def __call__(self, event_type: str, **fields: Any) -> None:
         stage = fields.get("stage")
         if event_type == "stage_started" and stage:
+            # Stages run strictly in sequence, so a new one starting means the
+            # previous has finished. Without this, a stage that emits no
+            # completion event (the plain LLM stages do not) would stay open and
+            # later be stamped with the entire run's duration.
+            self.close_open_runs()
             run = AgentRun(
                 stage=Stage(stage),
                 label=str(fields.get("label") or STAGE_LABELS.get(stage, stage)),
@@ -177,10 +182,23 @@ async def run_pipeline(project: Project) -> Project:
         except asyncio.TimeoutError:
             return _fail(
                 project, emit,
-                f"The research pipeline exceeded its {PIPELINE_TIMEOUT_S}s time limit.",
+                f"The research pipeline exceeded its {PIPELINE_TIMEOUT_S}s time limit. "
+                "The most common cause is Gemini rate limiting: a free-tier key allows "
+                "only 5 requests per minute per model, which this pipeline exceeds. "
+                "Enable billing on the Google Cloud project, or lower "
+                "MAX_RESEARCH_TASKS and EVIDENCE_CONCURRENCY.",
             )
         except Exception as exc:  # noqa: BLE001 - surface, never swallow
             logger.exception("Pipeline failed for project %s", project.id)
+            detail = str(exc)
+            if "RESOURCE_EXHAUSTED" in detail or "429" in detail or "quota" in detail.lower():
+                return _fail(
+                    project, emit,
+                    "Gemini rejected requests for exceeding the API quota. A free-tier "
+                    "key allows only 5 requests per minute per model; this pipeline "
+                    "needs more. Enable billing on the Google Cloud project, or reduce "
+                    "MAX_RESEARCH_TASKS and EVIDENCE_CONCURRENCY.",
+                )
             return _fail(project, emit, f"{type(exc).__name__}: {exc}")
 
         final = await session_service.get_session(

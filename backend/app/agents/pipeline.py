@@ -41,9 +41,10 @@ from ..schemas import (
 )
 from ..scoring import compute_assessment
 from . import blocks, prompts
+from .evidence_agent import EvidenceAgent
+from .models import build_model
 from .research_agent import ResearchAgent
 from .validators import (
-    make_evidence_validator,
     make_recommendation_validator,
     make_risk_validator,
     make_verification_validator,
@@ -52,7 +53,16 @@ from .validators import (
 logger = logging.getLogger(__name__)
 
 #: Low temperature: this is an analysis system, not a creative one.
-GENERATION_CONFIG = types.GenerateContentConfig(temperature=0.2, top_p=0.9)
+#: ``thinking_level="low"`` is a deliberate latency decision. Every stage is
+#: given its full context and a tightly specified output schema, so extended
+#: deliberation buys little here but costs seconds on every one of six calls -
+#: and the whole run has to finish inside a three-minute demo.
+GENERATION_CONFIG = types.GenerateContentConfig(
+    temperature=0.2,
+    top_p=0.9,
+    thinking_config=types.ThinkingConfig(thinking_level="low"),
+)
+
 
 
 def _stage_start(emit: Callable[..., None], stage: Stage) -> Callable:
@@ -150,8 +160,10 @@ def build_pipeline(
     end-to-end in tests without reaching the network.
     """
 
-    fast = settings.model
-    deep = settings.reasoning_model_or_default()
+    # One chain per run: primary model with automatic failover to the
+    # alternates, so a capacity spike on one model cannot end the pipeline.
+    fast = build_model(settings.model, settings.fallback_list())
+    deep = build_model(settings.reasoning_model_or_default(), settings.fallback_list())
 
     # -- Stage 1: plan the research ------------------------------------------
     brief_agent = LlmAgent(
@@ -177,26 +189,15 @@ def build_pipeline(
         before_agent_callback=_stage_start(emit, Stage.RESEARCH),
     )
 
-    # -- Stage 3: raw excerpts -> citable claims ------------------------------
-    def evidence_instruction(ctx: ReadonlyContext) -> str:
-        state = ctx.state
-        return prompts.evidence_instruction(
-            brief_block,
-            str(state.get("source_catalog_block") or "(no sources retrieved)"),
-            str(state.get("search_digest") or "(no content retrieved)"),
-        )
-
-    evidence_agent = LlmAgent(
+    # -- Stage 3: raw excerpts -> citable claims (concurrent, per task) -------
+    evidence_agent = EvidenceAgent(
         name="evidence_agent",
-        model=fast,
         description="Extracts atomic, source-bound claims from retrieved content.",
-        instruction=evidence_instruction,
-        output_schema=EvidenceSet,
-        output_key="evidence",
-        include_contents="none",
-        generate_content_config=GENERATION_CONFIG,
+        emit=emit,
+        model=fast,
+        brief_block=brief_block,
+        generate_config=GENERATION_CONFIG,
         before_agent_callback=_stage_start(emit, Stage.EVIDENCE),
-        after_agent_callback=make_evidence_validator(emit),
     )
 
     # -- Stage 4: cross-check claims against each other -----------------------

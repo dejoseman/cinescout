@@ -8,6 +8,38 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
+
+
+def _load_dotenv() -> None:
+    """Load repository-root ``.env`` into the environment, if present.
+
+    Uses ``setdefault`` so a real environment variable always wins. That matters
+    in production: Cloud Run injects secrets as env vars, and a stray ``.env``
+    inside an image must never override them.
+
+    Hand-rolled rather than taking a dependency for ~15 lines, and silent when
+    the file is absent, which is the normal case in a container.
+    """
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    try:
+        raw = env_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return
+
+    for line in raw.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        # Strip surrounding quotes; keys pasted from a dashboard often carry them.
+        value = value.strip().strip('"').strip("'")
+        if key and value:
+            os.environ.setdefault(key, value)
+
+
+_load_dotenv()
 
 
 def _int(name: str, default: int) -> int:
@@ -59,7 +91,17 @@ class Settings:
         default_factory=lambda: os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
     )
     #: Fast, GA workhorse used for every stage by default.
-    model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-3.7-flash"))
+    #: gemini-3.5-flash rather than the newer 3.6/3.7: measured 2026-09-02, both
+    #: newer models returned 503 "high demand" while 3.5-flash answered the same
+    #: structured-output prompt in 2.7s with thinking disabled. Newest is not the
+    #: same as available, and a live demo cannot ride on a constrained model.
+    model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-3.5-flash"))
+    #: Tried in order when the primary is unavailable. See agents/models.py.
+    fallback_models: str = field(
+        default_factory=lambda: os.getenv(
+            "GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.1-flash-lite"
+        )
+    )
     #: Optional heavier model for the judgement-dense stages.
     reasoning_model: str = field(default_factory=lambda: os.getenv("GEMINI_REASONING_MODEL", ""))
 
@@ -84,6 +126,9 @@ class Settings:
         default_factory=lambda: _int("MAX_CONCURRENT_PIPELINES", 3)
     )
     max_evidence_chars: int = field(default_factory=lambda: _int("MAX_EVIDENCE_CHARS", 60000))
+    #: Concurrent evidence-extraction calls. Keep at 3 on a free-tier Gemini key
+    #: (5 requests/minute/model); raise to 6+ on a paid key for lower latency.
+    evidence_concurrency: int = field(default_factory=lambda: _int("EVIDENCE_CONCURRENCY", 3))
 
     # -- API -------------------------------------------------------------------
     rate_limit_per_hour: int = field(default_factory=lambda: _int("RATE_LIMIT_PER_HOUR", 20))
@@ -101,6 +146,9 @@ class Settings:
 
     def reasoning_model_or_default(self) -> str:
         return self.reasoning_model or self.model
+
+    def fallback_list(self) -> list[str]:
+        return [m.strip() for m in self.fallback_models.split(",") if m.strip()]
 
 
 settings = Settings()

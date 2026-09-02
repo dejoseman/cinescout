@@ -30,10 +30,16 @@ async def _run_pipeline():
 
     pipeline = build_pipeline(emit, DEMO_BRIEF.to_prompt_block(), FakeParallelClient)
 
-    # Swap every Gemini-backed stage for the fake model.
+    # Swap every Gemini-backed stage for the fake model. Stages carry a
+    # configured Gemini object (not a bare string), so this checks for any
+    # populated model rather than a particular type - and asserts afterwards
+    # that nothing real survived, so this test can never reach the network.
+    swapped = 0
     for agent in pipeline.sub_agents:
-        if hasattr(agent, "model") and isinstance(getattr(agent, "model"), str):
+        if getattr(agent, "model", None):
             agent.model = FakeLlm(model="fake-model")
+            swapped += 1
+    assert swapped == 6, f"expected 6 LLM stages to be stubbed, stubbed {swapped}"
 
     session_service = InMemorySessionService()
     runner = Runner(

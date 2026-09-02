@@ -97,3 +97,37 @@ def test_blank_list_entries_are_stripped():
         requirements=[],
     )
     assert brief.locations == ["Rooftop"]
+
+
+# -- Run timeline ------------------------------------------------------------
+
+
+def test_stage_durations_are_bounded_by_the_next_stage_start():
+    """A stage with no completion event must not absorb the whole run's time.
+
+    The plain LLM stages emit no `stage_completed`; before this was fixed they
+    stayed open and the trace reported the brief stage as taking 197s when it
+    actually took 8.
+    """
+    import time
+
+    from app.orchestrator import RunRecorder
+
+    recorder = RunRecorder("timeline-test")
+
+    recorder("stage_started", stage="brief", label="Understanding production brief")
+    time.sleep(0.05)
+    recorder("stage_started", stage="research", label="Searching external sources")
+    recorder("stage_completed", stage="research", metrics={"sources": 3})
+    time.sleep(0.05)
+    recorder("stage_started", stage="report", label="Preparing production report")
+    recorder.close_open_runs()
+
+    runs = {run.stage.value: run for run in recorder.timeline()}
+
+    assert runs["brief"].status == "OK"
+    assert runs["brief"].duration_ms is not None
+    # Brief closed when research started, so it cannot include later stages.
+    assert runs["brief"].duration_ms < 200
+    assert runs["research"].duration_ms is not None
+    assert [r.stage.value for r in recorder.timeline()] == ["brief", "research", "report"]

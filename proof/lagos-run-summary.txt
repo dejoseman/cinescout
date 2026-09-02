@@ -1,0 +1,47 @@
+CineScout - Live Pipeline Run: 'Shadow District', Lagos
+Date: 2026-09-02  |  All eight stages executed against live Parallel + Gemini
+==========================================================================
+
+Readiness 52%  |  Evidence confidence 60%  |  Coverage 100%
+Sources 35 across 32 domains  |  Claims 43  |  Risks 6  |  Gaps 3
+
+Stage timings (free-tier Gemini key, rate-limited):
+  brief             197.4s  
+  research            4.3s  sources: 35, domains: 32, tasks: 6, failed_tasks: 0, excerpts: 36
+  evidence          105.1s  claims: 43, dropped: 0, failed_tasks: 0
+  verification       32.8s  statuses: {'SUPPORTED': 24, 'UNCONFIRMED': 17, 'VERIFIED': 2}
+  risk               15.6s  risks: 6, critical: 2, gaps: 3
+  scoring             0.0s  readiness: 52, confidence: 60, coverage: 100
+  recommendation      9.6s  recommendations: 6
+  report             22.0s  
+
+Authoritative sources retrieved (official .gov):
+  src_03  rpas.ncaa.gov.ng             https://rpas.ncaa.gov.ng/
+  src_10  lagosstate.gov.ng            https://lagosstate.gov.ng/
+  src_11  lsfvcb.lagosstate.gov.ng     https://lsfvcb.lagosstate.gov.ng/
+  src_14  ng.usembassy.gov             https://ng.usembassy.gov/security-alert-lagos-nigeria-july-7-2026
+  src_16  lsstf.lagosstate.gov.ng      https://lsstf.lagosstate.gov.ng/mobile-police-force
+  src_19  trade.gov                    https://trade.gov/country-commercial-guides/nigeria-temporary-entry
+  src_20  twp.immigration.gov.ng       https://twp.immigration.gov.ng/
+  src_21  immigration.gov.ng           https://immigration.gov.ng/info-center/temporary-work-permit-6-months-r11
+  src_23  immigration.gov.ng           https://immigration.gov.ng/visa_group/temporary-work-permit
+  src_25  rcflood.gov                  https://rcflood.gov/lagos-weather-in-february
+
+Verification mix: {'SUPPORTED': 24, 'UNCONFIRMED': 17, 'VERIFIED': 2}
+
+Sample UNCONFIRMED findings (evidence discipline working):
+  - Commercial drone pilots must apply directly to the Nigerian Aviation Authority for a permit.
+    reason: Sourced solely from a Tier 3 secondary aggregator website.
+  - Commercial drone pilots must go through the National Security Advisor's (NSA) vetting process.
+    reason: Sourced solely from a Tier 3 secondary aggregator site, though partially aligned with official NCAA ONSA scree
+  - To satisfy the vetting requirement, pilots must complete the Part 21 online training course on rpasa
+    reason: Rests solely on a Tier 3 drone aggregator site with no official CAA corroboration provided.
+  - Pilots must pass an initial aeronautical knowledge exam administered by an NCAA-accredited testing f
+    reason: Rests solely on a Tier 3 drone aggregator site.
+  - Drones operating in Class G airspace must be registered.
+    reason: Rests solely on a Tier 3 aggregator page.
+
+Executive summary:
+The research indicates that proceeding with 'Shadow District' in Lagos is feasible on a 12-day timeline, but requires immediate restructuring of regulatory, visa, and equipment logistics before greenlighting. Key decisive factors include the absolute lack of ATA Carnet access (requiring complex customs pre-clearance in Abuja), strict drone regulations requiring a pre-vetted local operator, and the legal requirement for a local host company to secure a Temporary Work Permit for the foreign director. While full research coverage was achieved, evidence confidence sits at 60%, leaving budget uncertainties around MOPOL police escort costs and specific permit timelines.
+
+Citation integrity: PASS - every claim cites a source the retrieval layer returned

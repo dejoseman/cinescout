@@ -87,7 +87,7 @@ scoring methodology: **[docs/SCORING.md](docs/SCORING.md)**
 
 | Service | Role |
 |---|---|
-| **Gemini** `gemini-3.7-flash` | Reasoning for all six LLM stages. `GEMINI_REASONING_MODEL` can raise the judgement-dense stages to `gemini-3.1-pro-preview`. |
+| **Gemini** `gemini-3.6-flash` | Reasoning for all six LLM stages. `GEMINI_REASONING_MODEL` can raise the judgement-dense stages to `gemini-3.1-pro-preview`. |
 | **Agent Development Kit (ADK 2.7)** | `SequentialAgent` orchestration, `LlmAgent` typed structured output, custom `BaseAgent` stages, session state, event streaming. ADK is the only orchestration layer — no third-party agent framework is used. |
 | **Vertex AI / Gemini Enterprise Agent Platform** | Production auth path via ADC (`GOOGLE_GENAI_USE_VERTEXAI=TRUE`). |
 | **Cloud Run** | Hosts the single container. |
@@ -219,6 +219,31 @@ To use Vertex AI instead of an API key, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE` and
 
 ---
 
+## Performance
+
+Measured end to end on the seeded Lagos brief, 2026-09-02:
+
+| Stage | Paid-tier | Free-tier key |
+|---|---:|---:|
+| Brief (plan research) | 7.7s | 7.7s |
+| Research (6 Parallel searches) | 4.3s | 4.3s |
+| Evidence (concurrent extraction) | **18.1s** | 105.1s |
+| Verification | 13.3s | 32.8s |
+| Risk | 15.6s | 15.6s |
+| Scoring (deterministic) | 0.0s | 0.0s |
+| Recommendations + report | ~30s | ~30s |
+| **Total** | **~75s** | **198s** |
+
+**The Gemini free tier allows 5 requests per minute per model.** A full run makes
+about eleven model calls, so a free-tier key is throttled: the same evidence stage
+measured 18.1s with quota available and 105.1s once rate-limited, with twelve 429s
+and six model failovers in a single run. **Enable billing before demoing.**
+
+Parallel is never the bottleneck - six searches returning 35 sources across 32
+domains complete in ~4 seconds.
+
+---
+
 ## Environment variables
 
 | Variable | Required | Default | Purpose |
@@ -228,7 +253,7 @@ To use Vertex AI instead of an API key, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE` and
 | `GOOGLE_GENAI_USE_VERTEXAI` | no | `FALSE` | Route Gemini through Vertex AI using ADC. |
 | `GOOGLE_CLOUD_PROJECT` | yes* | — | Required when using Vertex AI. |
 | `GOOGLE_CLOUD_LOCATION` | no | `us-central1` | Vertex AI region. |
-| `GEMINI_MODEL` | no | `gemini-3.7-flash` | Workhorse model for all stages. |
+| `GEMINI_MODEL` | no | `gemini-3.6-flash` | Workhorse model for all stages. Change this first if you hit 503s. |
 | `GEMINI_REASONING_MODEL` | no | = `GEMINI_MODEL` | Heavier model for judgement-dense stages. |
 | `PARALLEL_MODE` | no | `basic` | `basic` \| `fast` \| `turbo` \| `advanced`. |
 | `PARALLEL_MAX_RESULTS` | no | `6` | Results per search. |
@@ -236,6 +261,8 @@ To use Vertex AI instead of an API key, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE` and
 | `PARALLEL_MAX_CONCURRENCY` | no | `5` | Concurrent searches. |
 | `MAX_RESEARCH_TASKS` | no | `8` | Cap on planned tasks; bounds latency and spend. |
 | `MAX_CONCURRENT_PIPELINES` | no | `3` | Concurrent analyses per instance. |
+| `EVIDENCE_CONCURRENCY` | no | `3` | Concurrent extraction calls. Raise to 6+ on a paid Gemini key. |
+| `GEMINI_FALLBACK_MODELS` | no | `gemini-3.6-flash,gemini-3.1-flash-lite` | Tried in order when the primary is unavailable. |
 | `RATE_LIMIT_PER_HOUR` | no | `20` | Analyses per client IP per hour. |
 | `LOG_LEVEL` | no | `INFO` | Logging verbosity. |
 
