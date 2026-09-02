@@ -19,6 +19,18 @@ from app.integrations.parallel_client import (
     SearchSuccess,
     canonicalise_url,
     domain_of,
+    is_usable_excerpt,
+)
+
+# Excerpts here are realistic in length: anything under 40 characters cannot
+# support a citable claim and is filtered out as unusable.
+FIRST_EXCERPT = (
+    "Filming permits in Lagos are issued by the state film office and must be "
+    "obtained before shooting on public streets."
+)
+SECOND_EXCERPT = (
+    "Applications are processed within ten working days of submission, and a "
+    "location fee applies per shooting day."
 )
 
 RESPONSE = {
@@ -29,12 +41,12 @@ RESPONSE = {
             "url": "https://www.example.com/a?utm_source=x",
             "title": "Example A",
             "publish_date": "2025-01-01",
-            "excerpts": ["First excerpt", "Second excerpt"],
+            "excerpts": [FIRST_EXCERPT, SECOND_EXCERPT],
         },
         {
             "url": "https://example.com/a",  # same document once canonicalised
             "title": "Example A duplicate",
-            "excerpts": ["Duplicate"],
+            "excerpts": ["A duplicate excerpt long enough to pass the filter here."],
         },
     ],
 }
@@ -87,7 +99,7 @@ async def test_successful_search_parses_and_deduplicates():
     assert result.search_id == "search_abc"
     assert len(result.hits) == 1, "the same document must collapse to one hit"
     assert result.hits[0].url == "https://example.com/a"
-    assert result.hits[0].excerpts == ["First excerpt", "Second excerpt"]
+    assert result.hits[0].excerpts == [FIRST_EXCERPT, SECOND_EXCERPT]
 
 
 async def test_missing_api_key_raises_rather_than_faking_results():
@@ -207,3 +219,104 @@ async def test_search_many_isolates_failures():
 
     assert isinstance(results[0], SearchSuccess)
     assert isinstance(results[1], SearchFailure)
+
+
+# -- Error reporting ---------------------------------------------------------
+
+
+async def test_validation_error_detail_is_surfaced_not_swallowed():
+    """A 422 must explain itself. This is the bug that made mode='base' opaque."""
+    body = {
+        "type": "error",
+        "error": {
+            "ref_id": "abc123",
+            "message": "Request validation error.",
+            "detail": {
+                "errors": [
+                    {
+                        "type": "literal_error",
+                        "loc": ["body", "mode"],
+                        "msg": "Input should be 'basic', 'fast', 'turbo' or 'advanced'",
+                    }
+                ]
+            },
+        },
+    }
+
+    async with _client(lambda r: httpx.Response(422, json=body)) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert isinstance(result, SearchFailure)
+    assert "422" in result.error
+    assert "body.mode" in result.error
+    assert "basic" in result.error
+
+
+async def test_plain_error_message_is_surfaced():
+    body = {"type": "error", "error": {"message": "Invalid search mode: 'agentic'."}}
+    async with _client(lambda r: httpx.Response(422, json=body)) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert "Invalid search mode" in result.error
+
+
+async def test_non_json_error_body_does_not_crash_the_client():
+    async with _client(lambda r: httpx.Response(400, content=b"<html>gateway</html>")) as client:
+        result = await client.search("t1", ["q"], "o")
+    assert isinstance(result, SearchFailure)
+    assert "400" in result.error
+
+
+# -- Junk excerpt filtering --------------------------------------------------
+
+
+def test_error_pages_are_not_treated_as_evidence():
+    """Observed live: a source returned a Cloudflare 502 page as its excerpt."""
+    assert not is_usable_excerpt(
+        "# Bad gateway Error code 502 Visit cloudflare.com for more information."
+    )
+    assert not is_usable_excerpt("Just a moment... Checking your browser before access.")
+    assert not is_usable_excerpt("403 Forbidden - access denied to this resource here.")
+    assert not is_usable_excerpt("short")
+
+
+def test_genuine_content_survives_the_filter():
+    assert is_usable_excerpt(
+        "A permit must be obtained from the Lagos State Film and Video Censors "
+        "Board before filming on public streets."
+    )
+    # A real article may legitimately discuss errors later in its body.
+    assert is_usable_excerpt(
+        "The Lagos State film office publishes its permit schedule online, and "
+        "applicants occasionally report a 404 error on the legacy portal page."
+    )
+
+
+async def test_junk_excerpts_are_stripped_from_results():
+    payload = {
+        "search_id": "s",
+        "results": [
+            {
+                "url": "https://blocked.example/a",
+                "title": "Blocked",
+                "excerpts": ["# Bad gateway Error code 502 Visit cloudflare.com for info."],
+            },
+            {
+                "url": "https://good.example/b",
+                "title": "Good",
+                "excerpts": [
+                    "Filming permits in Lagos are issued by the state film office "
+                    "and require ten working days."
+                ],
+            },
+        ],
+    }
+    async with _client(lambda r: httpx.Response(200, json=payload)) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert isinstance(result, SearchSuccess)
+    by_url = {h.url: h for h in result.hits}
+    # The blocked page survives as a hit but carries no citable text, so the
+    # research stage will not build a source from it.
+    assert by_url["https://blocked.example/a"].excerpts == []
+    assert len(by_url["https://good.example/b"].excerpts) == 1

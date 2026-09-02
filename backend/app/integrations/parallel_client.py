@@ -46,6 +46,49 @@ _TRACKING_PARAMS = {
 
 _RETRYABLE_STATUS = {408, 425, 429, 500, 502, 503, 504}
 
+#: Retrieval sometimes succeeds at the HTTP level while the fetched page is an
+#: error, bot-wall or consent interstitial. Its text is not evidence, and letting
+#: it through wastes context and invites nonsense claims, so it is dropped here
+#: rather than left for the model to recognise.
+_JUNK_EXCERPT_MARKERS = (
+    "bad gateway",
+    "error code 5",
+    "error code 4",
+    "504 gateway",
+    "502 bad",
+    "403 forbidden",
+    "404 not found",
+    "page not found",
+    "access denied",
+    "attention required!",
+    "just a moment",
+    "checking your browser",
+    "enable javascript",
+    "please enable cookies",
+    "verify you are human",
+    "captcha",
+    "are you a robot",
+    "site can't be reached",
+    "service unavailable",
+    "temporarily unavailable",
+)
+
+#: Below this length an excerpt cannot support a claim worth citing.
+_MIN_EXCERPT_CHARS = 40
+
+
+def is_usable_excerpt(text: str) -> bool:
+    """Whether retrieved text is real page content rather than an error wall.
+
+    Only the opening of the excerpt is inspected: a legitimate article may well
+    discuss captchas or 404s, but an error page announces itself immediately.
+    """
+    cleaned = text.strip()
+    if len(cleaned) < _MIN_EXCERPT_CHARS:
+        return False
+    head = cleaned[:200].lower()
+    return not any(marker in head for marker in _JUNK_EXCERPT_MARKERS)
+
 
 def canonicalise_url(url: str) -> str:
     """Normalise a URL so the same document dedupes to one entry.
@@ -211,7 +254,9 @@ class ParallelSearchClient:
             if isinstance(excerpts_raw, str):
                 excerpts_raw = [excerpts_raw]
             excerpts = [
-                e.strip() for e in excerpts_raw if isinstance(e, str) and e.strip()
+                e.strip()
+                for e in excerpts_raw
+                if isinstance(e, str) and is_usable_excerpt(e)
             ]
 
             hits.append(
@@ -270,9 +315,13 @@ class ParallelSearchClient:
                             self._ms(started),
                         )
                     if response.status_code >= 400:
+                        # Carry Parallel's own explanation through. A bare status
+                        # code turns a one-line request-shape bug into a guessing
+                        # game; the API tells us exactly what it rejected.
                         return SearchFailure(
                             task_id, clean,
-                            f"Parallel returned HTTP {response.status_code}.",
+                            f"Parallel returned HTTP {response.status_code}: "
+                            f"{self._error_detail(response)}",
                             self._ms(started),
                         )
 
@@ -326,6 +375,38 @@ class ParallelSearchClient:
     @staticmethod
     def _ms(started: float) -> int:
         return int((time.perf_counter() - started) * 1000)
+
+    @staticmethod
+    def _error_detail(response: httpx.Response) -> str:
+        """Extract Parallel's human-readable error message from a 4xx/5xx body.
+
+        Parallel returns ``{"type": "error", "error": {"message": ..., "detail":
+        {"errors": [{"loc": [...], "msg": ...}]}}}``. Field-level validation
+        errors are the useful part, so surface those when present.
+        """
+        try:
+            body = response.json()
+        except ValueError:
+            return (response.text or "no response body")[:200]
+
+        if not isinstance(body, dict):
+            return str(body)[:200]
+
+        error = body.get("error")
+        if not isinstance(error, dict):
+            return str(body.get("detail") or body)[:200]
+
+        message = str(error.get("message") or "").strip()
+        detail = error.get("detail")
+        if isinstance(detail, dict):
+            fields = [
+                f"{'.'.join(str(p) for p in (e.get('loc') or [])[-2:])}: {e.get('msg')}"
+                for e in (detail.get("errors") or [])
+                if isinstance(e, dict)
+            ]
+            if fields:
+                message = f"{message} ({'; '.join(fields)})" if message else "; ".join(fields)
+        return (message or "unknown error")[:300]
 
     @staticmethod
     async def _backoff(attempt: int, response: Optional[httpx.Response] = None) -> None:

@@ -24,6 +24,31 @@ def _bool(name: str, default: bool = False) -> bool:
     return raw in {"1", "true", "yes", "on"}
 
 
+#: Search modes the Parallel v1 API actually accepts. The schema advertises a
+#: wider enum, but the service rejects anything outside this set with a 422.
+PARALLEL_MODES = ("basic", "fast", "turbo", "advanced")
+
+#: The v1beta API called this field "processor" and used "base". Anyone
+#: carrying an old .env forward would otherwise get an opaque 422 at run time.
+_LEGACY_MODES = {"base": "basic", "pro": "advanced"}
+
+
+def _parallel_mode() -> str:
+    """Resolve and validate the search mode, failing loudly on a bad value.
+
+    A wrong mode is otherwise only discovered mid-pipeline as an HTTP 422, by
+    which point several searches have already been paid for.
+    """
+    raw = (os.getenv("PARALLEL_MODE", "") or "basic").strip().lower()
+    mode = _LEGACY_MODES.get(raw, raw)
+    if mode not in PARALLEL_MODES:
+        raise ValueError(
+            f"PARALLEL_MODE={raw!r} is not a valid Parallel search mode. "
+            f"Use one of: {', '.join(PARALLEL_MODES)}."
+        )
+    return mode
+
+
 @dataclass(frozen=True)
 class Settings:
     # -- Google Cloud / Gemini -------------------------------------------------
@@ -43,9 +68,10 @@ class Settings:
     parallel_base_url: str = field(
         default_factory=lambda: os.getenv("PARALLEL_BASE_URL", "https://api.parallel.ai")
     )
-    #: "turbo" | "fast" | "base" | "advanced". Lower tiers are faster, which
-    #: matters for a live three-minute demo.
-    parallel_mode: str = field(default_factory=lambda: os.getenv("PARALLEL_MODE", "base"))
+    #: "basic" | "fast" | "turbo" | "advanced". Measured against the live API on
+    #: 2026-09-02, "basic" was both fast (~1.7s) and returned the most excerpt
+    #: text, which is what the evidence stage needs.
+    parallel_mode: str = field(default_factory=_parallel_mode)
     parallel_max_results: int = field(default_factory=lambda: _int("PARALLEL_MAX_RESULTS", 6))
     parallel_max_chars: int = field(default_factory=lambda: _int("PARALLEL_MAX_CHARS", 1500))
     parallel_timeout_s: int = field(default_factory=lambda: _int("PARALLEL_TIMEOUT_S", 45))

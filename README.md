@@ -106,7 +106,7 @@ x-api-key: $PARALLEL_API_KEY
 
 { "search_queries": ["Lagos film permit requirements", "Lagos State filming fees"],
   "objective": "Identify the permitting authority, fees and lead times.",
-  "mode": "base",
+  "mode": "basic",
   "advanced_settings": { "max_results": 6,
                          "excerpt_settings": { "max_chars_per_result": 1500 } } }
 ```
@@ -230,7 +230,7 @@ To use Vertex AI instead of an API key, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE` and
 | `GOOGLE_CLOUD_LOCATION` | no | `us-central1` | Vertex AI region. |
 | `GEMINI_MODEL` | no | `gemini-3.7-flash` | Workhorse model for all stages. |
 | `GEMINI_REASONING_MODEL` | no | = `GEMINI_MODEL` | Heavier model for judgement-dense stages. |
-| `PARALLEL_MODE` | no | `base` | `turbo` \| `fast` \| `base` \| `advanced`. |
+| `PARALLEL_MODE` | no | `basic` | `basic` \| `fast` \| `turbo` \| `advanced`. |
 | `PARALLEL_MAX_RESULTS` | no | `6` | Results per search. |
 | `PARALLEL_MAX_CHARS` | no | `1500` | Excerpt characters per result. |
 | `PARALLEL_MAX_CONCURRENCY` | no | `5` | Concurrent searches. |

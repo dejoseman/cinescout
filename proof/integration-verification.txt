@@ -1,0 +1,39 @@
+CineScout - Partner Integration Verification
+Run: 2026-09-02 17:26 UTC  |  host: MINGW64_NT-10.0-19045
+Purpose: evidence that Parallel Search and Google Gemini are invoked at
+runtime. No fixtures, no cached responses - these are live API calls.
+===========================================================================
+
+CineScout integration verification
+==============================================
+Gemini model      : gemini-3.7-flash
+Reasoning model   : gemini-3.7-flash
+Parallel endpoint : https://api.parallel.ai/v1/search
+Parallel mode     : basic
+
+== Parallel Search API ==
+PASS  Live search returned 6 sources in 1391 ms.
+      search_id: search_3ffea017b7f60599e50f2a0bbeb4583f
+      - https://beverlyboy.com/camera-crews/how-much-does-a-lagos-camera-crew-cost
+        Phone Number:  Tell Us About Your Project  ## How much does it cost to film in Lagos?  Hav...
+      - https://premiumtimesng.com/entertainment/nollywood/438831-why-filmmakers-might-require-permit-to-film-in-lagos-governor-sanwo-olu.html
+        Lagos state governor, Babajide Sanwo-Olu, says filmmakers might need to get a permit while...
+      - https://emergefilmsolutions.com/country/nigeria
+        **Ekiti** . Ado Ekiti is the state capital. Agricultural crops of note include cocoa and t...
+      - https://nps.gov/rowi/planyourvisit/film-permit.htm
+        The assignment and estimate will be provided prior to the final permit being issued and th...
+      - https://home.nps.gov/colm/planyourvisit/filming-photography-permit.htm
+        Please allow as much time as possible for evaluation by the park staff before the start da...
+
+== Google Gemini ==
+PASS  Model gemini-3.7-flash responded via Gemini API.
+      {"status": "ok"}
+
+==============================================
+Both integrations execute live.
+
+===========================================================================
+Dependency compliance (no prohibited AI providers):
+PASS  No prohibited AI provider found.
+      Orchestration: Google ADK. Reasoning: Google Gemini.
+      External retrieval: Parallel Search API.
