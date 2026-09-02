@@ -1,0 +1,1 @@
+"""CineScout backend application."""

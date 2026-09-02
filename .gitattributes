@@ -1,0 +1,11 @@
+# Normalise line endings: the repo stores LF, so the Linux container build and
+# any shell entrypoints are never handed CRLF from a Windows checkout.
+* text=auto eol=lf
+
+# Binary / generated assets git should not try to diff or convert.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+package-lock.json -diff

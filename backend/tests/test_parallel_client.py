@@ -1,0 +1,209 @@
+"""Tests for the Parallel Search client.
+
+Covers the behaviours the rest of the system depends on: canonical URLs, tolerant
+response parsing, typed failures instead of exceptions, retry on transient
+errors, and the fallback between Parallel API generations.
+"""
+
+from __future__ import annotations
+
+from contextlib import asynccontextmanager
+
+import httpx
+import pytest
+
+from app.integrations.parallel_client import (
+    ParallelNotConfigured,
+    ParallelSearchClient,
+    SearchFailure,
+    SearchSuccess,
+    canonicalise_url,
+    domain_of,
+)
+
+RESPONSE = {
+    "search_id": "search_abc",
+    "session_id": "session_abc",
+    "results": [
+        {
+            "url": "https://www.example.com/a?utm_source=x",
+            "title": "Example A",
+            "publish_date": "2025-01-01",
+            "excerpts": ["First excerpt", "Second excerpt"],
+        },
+        {
+            "url": "https://example.com/a",  # same document once canonicalised
+            "title": "Example A duplicate",
+            "excerpts": ["Duplicate"],
+        },
+    ],
+}
+
+
+@asynccontextmanager
+async def _client(handler):
+    """Yield a client wired to a mock transport.
+
+    The transport is installed *after* the client would normally build its own,
+    so this deliberately does not go through ``__aenter__``.
+    """
+    client = ParallelSearchClient(api_key="test-key")
+    client._client = httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), headers=client._headers()
+    )
+    try:
+        yield client
+    finally:
+        await client._client.aclose()
+
+
+# -- URL handling -----------------------------------------------------------
+
+
+def test_canonicalise_strips_tracking_www_and_fragment():
+    assert (
+        canonicalise_url("HTTPS://WWW.Example.com/Path/?utm_source=ads&id=7#section")
+        == "https://example.com/Path?id=7"
+    )
+
+
+def test_canonicalise_preserves_root_slash_and_handles_junk():
+    assert canonicalise_url("https://example.com/") == "https://example.com/"
+    assert canonicalise_url("not a url") == "not a url"
+
+
+def test_domain_of_drops_www():
+    assert domain_of("https://www.gov.ng/permits") == "gov.ng"
+
+
+# -- Response handling ------------------------------------------------------
+
+
+async def test_successful_search_parses_and_deduplicates():
+    async with _client(lambda r: httpx.Response(200, json=RESPONSE)) as client:
+        result = await client.search("t1", ["lagos film permit"], "objective")
+
+    assert isinstance(result, SearchSuccess)
+    assert result.search_id == "search_abc"
+    assert len(result.hits) == 1, "the same document must collapse to one hit"
+    assert result.hits[0].url == "https://example.com/a"
+    assert result.hits[0].excerpts == ["First excerpt", "Second excerpt"]
+
+
+async def test_missing_api_key_raises_rather_than_faking_results():
+    client = ParallelSearchClient(api_key="")
+    client._client = httpx.AsyncClient(transport=httpx.MockTransport(lambda r: httpx.Response(200)))
+    with pytest.raises(ParallelNotConfigured):
+        await client.search("t1", ["q"], "o")
+
+
+async def test_empty_queries_fail_without_calling_the_api():
+    called = False
+
+    def handler(request):
+        nonlocal called
+        called = True
+        return httpx.Response(200, json=RESPONSE)
+
+    async with _client(handler) as client:
+        result = await client.search("t1", ["", "   "], "objective")
+
+    assert isinstance(result, SearchFailure)
+    assert not called
+
+
+async def test_auth_failure_is_reported_not_retried():
+    attempts = 0
+
+    def handler(request):
+        nonlocal attempts
+        attempts += 1
+        return httpx.Response(401, json={"error": "bad key"})
+
+    async with _client(handler) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert isinstance(result, SearchFailure)
+    assert "401" in result.error
+    assert attempts == 1, "an invalid key must not be retried"
+
+
+async def test_malformed_json_degrades_to_a_typed_failure():
+    async with _client(lambda r: httpx.Response(200, content=b"<html>nope</html>")) as client:
+        result = await client.search("t1", ["q"], "o")
+    assert isinstance(result, SearchFailure)
+
+
+async def test_results_without_excerpts_are_kept_but_empty():
+    payload = {"search_id": "s", "results": [{"url": "https://a.org/x", "title": "T"}]}
+    async with _client(lambda r: httpx.Response(200, json=payload)) as client:
+        result = await client.search("t1", ["q"], "o")
+    assert isinstance(result, SearchSuccess)
+    assert result.hits[0].excerpts == []
+
+
+async def test_transient_error_is_retried_then_succeeds():
+    attempts = 0
+
+    def handler(request):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            return httpx.Response(503)
+        return httpx.Response(200, json=RESPONSE)
+
+    async with _client(handler) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert attempts == 2
+    assert isinstance(result, SearchSuccess)
+
+
+async def test_falls_back_to_the_older_api_generation_on_404():
+    """A 404 on /v1/search must transparently retry against /v1beta/search."""
+    paths = []
+
+    def handler(request):
+        paths.append(request.url.path)
+        if request.url.path == "/v1/search":
+            return httpx.Response(404)
+        return httpx.Response(200, json=RESPONSE)
+
+    async with _client(handler) as client:
+        result = await client.search("t1", ["q"], "o")
+
+    assert paths == ["/v1/search", "/v1beta/search"]
+    assert isinstance(result, SearchSuccess)
+
+
+async def test_request_carries_the_api_key_and_queries():
+    captured = {}
+
+    def handler(request):
+        captured["key"] = request.headers.get("x-api-key")
+        captured["body"] = request.read().decode()
+        return httpx.Response(200, json=RESPONSE)
+
+    async with _client(handler) as client:
+        await client.search("t1", ["lagos film permit"], "find permit rules")
+
+    assert captured["key"] == "test-key"
+    assert "lagos film permit" in captured["body"]
+    assert "find permit rules" in captured["body"]
+
+
+async def test_search_many_isolates_failures():
+    """One failing task must not cancel or corrupt the others."""
+
+    def handler(request):
+        if b"boom" in request.read():
+            return httpx.Response(500)
+        return httpx.Response(200, json=RESPONSE)
+
+    async with _client(handler) as client:
+        results = await client.search_many(
+            [("t1", ["good query"], "o"), ("t2", ["boom query"], "o")]
+        )
+
+    assert isinstance(results[0], SearchSuccess)
+    assert isinstance(results[1], SearchFailure)
