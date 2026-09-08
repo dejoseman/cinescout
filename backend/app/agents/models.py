@@ -56,6 +56,8 @@ _FAILOVER_MARKERS = (
     "internal error",
     "deadline",
     "timeout",
+    "model output",       # ADK empty-response error
+    "cannot both be empty",
 )
 
 
@@ -100,6 +102,10 @@ class RequestPacer:
 #: Shared across every stage, since the quota is per project, not per agent.
 pacer = RequestPacer(settings.gemini_max_rpm)
 
+#: How many times to retry the *same* model on an empty response before
+#: falling back to the next model in the chain.
+_EMPTY_RETRIES = 1
+
 
 class FallbackGemini(BaseLlm):
     """Tries each model in turn, moving on when one is unavailable.
@@ -133,34 +139,50 @@ class FallbackGemini(BaseLlm):
         for index, client in enumerate(self._clients):
             # The request carries the model name; point it at this candidate.
             llm_request.model = self.model_names[index]
-            await pacer.acquire()
-            try:
-                produced = False
-                async for response in client.generate_content_async(llm_request, stream):
-                    produced = True
-                    yield response
-                if produced:
-                    if index:
-                        logger.warning(
-                            "Model %s answered after %d model(s) were unavailable.",
-                            self.model_names[index], index,
+
+            # Retry the same model once on an empty response before giving up.
+            for attempt in range(_EMPTY_RETRIES + 1):
+                await pacer.acquire()
+                try:
+                    produced = False
+                    async for response in client.generate_content_async(llm_request, stream):
+                        produced = True
+                        yield response
+                    if produced:
+                        if index:
+                            logger.warning(
+                                "Model %s answered after %d model(s) were unavailable.",
+                                self.model_names[index], index,
+                            )
+                        return
+                    # Empty response — retry the same model once.
+                    last_error = RuntimeError(f"{self.model_names[index]} produced no response")
+                    if attempt < _EMPTY_RETRIES:
+                        logger.info(
+                            "Model %s returned empty response, retrying (attempt %d).",
+                            self.model_names[index], attempt + 1,
                         )
-                    return
-                last_error = RuntimeError(f"{self.model_names[index]} produced no response")
-            except Exception as exc:  # noqa: BLE001 - decide by error, below
-                last_error = exc
-                if not _is_failover_error(exc):
-                    # A bad request fails the same way everywhere. Surface it now
-                    # rather than repeating it against every model.
-                    raise
-                # Collapse whitespace before truncating: provider errors often
-                # begin with a newline, which otherwise hides the actual cause
-                # behind a mitigation link.
-                summary = " ".join(str(exc).split())[:220] or type(exc).__name__
-                logger.warning(
-                    "Model %s unavailable (%s: %s). Falling back.",
-                    self.model_names[index], type(exc).__name__, summary,
-                )
+                        await asyncio.sleep(3.0)
+                        continue
+                except Exception as exc:  # noqa: BLE001 - decide by error, below
+                    last_error = exc
+                    if not _is_failover_error(exc):
+                        # A bad request fails the same way everywhere. Surface it now
+                        # rather than repeating it against every model.
+                        raise
+                    # Collapse whitespace before truncating: provider errors often
+                    # begin with a newline, which otherwise hides the actual cause
+                    # behind a mitigation link.
+                    summary = " ".join(str(exc).split())[:220] or type(exc).__name__
+                    logger.warning(
+                        "Model %s unavailable (%s: %s). Falling back.",
+                        self.model_names[index], type(exc).__name__, summary,
+                    )
+                    # Brief cooldown before trying the next model.  On free tier the
+                    # quota window is per-minute; a two-second pause lets the next
+                    # model's sliding window breathe.
+                    await asyncio.sleep(2.0)
+                    break  # Move to next model in the chain
 
         raise RuntimeError(
             "Every configured Gemini model was unavailable "

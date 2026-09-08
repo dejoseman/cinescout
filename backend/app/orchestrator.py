@@ -49,7 +49,9 @@ logger = logging.getLogger(__name__)
 APP_NAME = "cinescout"
 
 #: Hard ceiling on a single run, so a hung upstream cannot pin a worker forever.
-PIPELINE_TIMEOUT_S = 420
+#: Raised for free-tier pacing (GEMINI_MAX_RPM=4): ~11 calls at 15s spacing
+#: plus model processing time needs more headroom than the billing-tier 420s.
+PIPELINE_TIMEOUT_S = 600
 
 #: Bounds concurrent pipelines to keep latency and spend predictable.
 _pipeline_slots = asyncio.Semaphore(settings.max_concurrent_pipelines)
@@ -141,86 +143,117 @@ async def run_pipeline(project: Project) -> Project:
         project.status = ProjectStatus.RUNNING
         emit("pipeline_started", project_id=project.id, title=project.brief.title)
 
-        session_service = InMemorySessionService()
-        pipeline = build_pipeline(emit, project.brief.to_prompt_block())
-        runner = Runner(
-            app_name=APP_NAME,
-            agent=pipeline,
-            session_service=session_service,
-        )
+        #: Retry the whole pipeline once on transient "model output" errors
+        #: (ADK raises these when Gemini returns an empty response).
+        max_attempts = 2
+        last_exc: Exception | None = None
 
-        session = await session_service.create_session(
-            app_name=APP_NAME,
-            user_id="producer",
-            session_id=project.id,
-            state={"brief": project.brief.model_dump(mode="json")},
-        )
-
-        # ADK anchors each stage's context on this message; the substance of
-        # every prompt is built deterministically from session state.
-        kickoff = types.Content(
-            role="user",
-            parts=[types.Part(text=f"Assess production feasibility for: {project.brief.title}")],
-        )
-
-        try:
-            async def drive() -> None:
-                async for event in runner.run_async(
-                    user_id="producer",
-                    session_id=session.id,
-                    new_message=kickoff,
-                ):
-                    if event.error_message:
-                        logger.warning(
-                            "ADK event error from %s: %s", event.author, event.error_message
-                        )
-
-            await asyncio.wait_for(drive(), timeout=PIPELINE_TIMEOUT_S)
-
-        except ParallelNotConfigured as exc:
-            return _fail(project, emit, str(exc))
-        except asyncio.TimeoutError:
-            return _fail(
-                project, emit,
-                f"The research pipeline exceeded its {PIPELINE_TIMEOUT_S}s time limit. "
-                "The most common cause is Gemini rate limiting: a free-tier key allows "
-                "only 5 requests per minute per model, which this pipeline exceeds. "
-                "Enable billing on the Google Cloud project, or lower "
-                "MAX_RESEARCH_TASKS and EVIDENCE_CONCURRENCY.",
+        for attempt in range(1, max_attempts + 1):
+            session_service = InMemorySessionService()
+            pipeline = build_pipeline(emit, project.brief.to_prompt_block())
+            runner = Runner(
+                app_name=APP_NAME,
+                agent=pipeline,
+                session_service=session_service,
             )
-        except Exception as exc:  # noqa: BLE001 - surface, never swallow
-            logger.exception("Pipeline failed for project %s", project.id)
-            detail = str(exc)
-            if "RESOURCE_EXHAUSTED" in detail or "429" in detail or "quota" in detail.lower():
+
+            session = await session_service.create_session(
+                app_name=APP_NAME,
+                user_id="producer",
+                session_id=f"{project.id}_attempt{attempt}",
+                state={"brief": project.brief.model_dump(mode="json")},
+            )
+
+            # ADK anchors each stage's context on this message; the substance of
+            # every prompt is built deterministically from session state.
+            kickoff = types.Content(
+                role="user",
+                parts=[types.Part(text=f"Assess production feasibility for: {project.brief.title}")],
+            )
+
+            try:
+                async def drive() -> None:
+                    async for event in runner.run_async(
+                        user_id="producer",
+                        session_id=session.id,
+                        new_message=kickoff,
+                    ):
+                        if event.error_message:
+                            logger.warning(
+                                "ADK event error from %s: %s", event.author, event.error_message
+                            )
+
+                await asyncio.wait_for(drive(), timeout=PIPELINE_TIMEOUT_S)
+
+                # Success — break out of retry loop
+                final = await session_service.get_session(
+                    app_name=APP_NAME, user_id="producer", session_id=session.id
+                )
+                state: Dict[str, Any] = dict(final.state) if final else {}
+
+                _populate(project, state)
+                emit.close_open_runs()
+                project.runs = emit.timeline()
+                project.status = ProjectStatus.COMPLETE
+                project.completed_at = datetime.now(timezone.utc)
+
+                emit(
+                    "complete",
+                    project_id=project.id,
+                    readiness=project.assessment.readiness_score if project.assessment else None,
+                    sources=len(project.sources),
+                    evidence=len(project.evidence),
+                    risks=len(project.risks),
+                )
+                return project
+
+            except ParallelNotConfigured as exc:
+                return _fail(project, emit, str(exc))
+            except asyncio.TimeoutError:
                 return _fail(
                     project, emit,
-                    "Gemini rejected requests for exceeding the API quota. A free-tier "
-                    "key allows only 5 requests per minute per model; this pipeline "
-                    "needs more. Enable billing on the Google Cloud project, or reduce "
-                    "MAX_RESEARCH_TASKS and EVIDENCE_CONCURRENCY.",
+                    f"The research pipeline exceeded its {PIPELINE_TIMEOUT_S}s time limit. "
+                    "The most common cause is Gemini rate limiting: a free-tier key allows "
+                    "only 5 requests per minute per model. Try setting GEMINI_MODEL to a "
+                    "model with available quota (e.g. gemini-3.1-flash-lite), lowering "
+                    "GEMINI_MAX_RPM to 4, EVIDENCE_CONCURRENCY to 1, and "
+                    "MAX_RESEARCH_TASKS to 5.",
                 )
-            return _fail(project, emit, f"{type(exc).__name__}: {exc}")
+            except Exception as exc:  # noqa: BLE001 - surface, never swallow
+                last_exc = exc
+                detail = str(exc)
 
-        final = await session_service.get_session(
-            app_name=APP_NAME, user_id="producer", session_id=session.id
-        )
-        state: Dict[str, Any] = dict(final.state) if final else {}
+                # Transient empty model response — retry if we have attempts left
+                if ("model output" in detail.lower() or "cannot both be empty" in detail.lower()):
+                    if attempt < max_attempts:
+                        logger.warning(
+                            "Pipeline attempt %d/%d failed with empty model response, "
+                            "retrying in 5s: %s", attempt, max_attempts, detail[:200],
+                        )
+                        await asyncio.sleep(5.0)
+                        continue
+                    # Exhausted retries
+                    return _fail(
+                        project, emit,
+                        "The model returned empty responses on multiple attempts. "
+                        "This usually resolves by waiting a minute and retrying. "
+                        "If it persists, try changing GEMINI_MODEL to a different model.",
+                    )
 
-        _populate(project, state)
-        emit.close_open_runs()
-        project.runs = emit.timeline()
-        project.status = ProjectStatus.COMPLETE
-        project.completed_at = datetime.now(timezone.utc)
+                logger.exception("Pipeline failed for project %s", project.id)
+                if "RESOURCE_EXHAUSTED" in detail or "429" in detail or "quota" in detail.lower():
+                    return _fail(
+                        project, emit,
+                        "Gemini rejected requests for exceeding the API quota. Free-tier "
+                        "limit is 5 requests per minute per model. Ensure GEMINI_MODEL "
+                        "is set to a model with available quota (e.g. gemini-3.1-flash-lite), "
+                        "GEMINI_MAX_RPM is 4 or lower, EVIDENCE_CONCURRENCY to 1, and "
+                        "MAX_RESEARCH_TASKS is 5 or lower. Wait 60 seconds before retrying.",
+                    )
+                return _fail(project, emit, f"{type(exc).__name__}: {exc}")
 
-        emit(
-            "complete",
-            project_id=project.id,
-            readiness=project.assessment.readiness_score if project.assessment else None,
-            sources=len(project.sources),
-            evidence=len(project.evidence),
-            risks=len(project.risks),
-        )
-        return project
+        # Should not reach here, but just in case:
+        return _fail(project, emit, f"Pipeline exhausted all {max_attempts} attempts. Last error: {last_exc}")
 
 
 def _populate(project: Project, state: Dict[str, Any]) -> None:

@@ -1,0 +1,1193 @@
+﻿{
+    "id":  "5d8c73d05400",
+    "brief":  {
+                  "title":  "Shadow District",
+                  "project_type":  "Independent feature film",
+                  "genre":  "Crime thriller",
+                  "country":  "Nigeria",
+                  "city":  "Lagos",
+                  "budget_amount":  85000.0,
+                  "budget_currency":  "USD",
+                  "shooting_days":  12,
+                  "shooting_period":  "February 2027",
+                  "locations":  [
+                                    "Rooftop overlooking Lagos Island at dusk",
+                                    "Police station exterior",
+                                    "Nightclub interior",
+                                    "Urban street scenes, Yaba and Surulere"
+                                ],
+                  "requirements":  [
+                                       "Night filming across multiple locations",
+                                       "Small crew of 12-15 people",
+                                       "Drone establishing shots over the city",
+                                       "Practical locations only, no studio build",
+                                       "Local fixer and security detail"
+                                   ],
+                  "target_audience":  "18-34 domestic Nigerian audience plus international festival circuit",
+                  "constraints":  "No studio build. Single equipment rental vendor assumed. Limited contingency budget. Director is travelling in from abroad and needs to know visa and equipment import implications.",
+                  "free_text":  "We are a two-person production company shooting our first feature in Lagos. We need to know whether 12 days is realistic for this location list, what permits we actually need for street and rooftop filming, whether drone shots over the city are permitted, and what the weather will do to us in February. We have no local production office and no legal team."
+              },
+    "status":  "COMPLETE",
+    "created_at":  "2026-09-08T04:49:13.726246Z",
+    "completed_at":  "2026-09-08T04:51:47.709237Z",
+    "error":  null,
+    "plan":  {
+                 "summary":  "This research plan assesses the feasibility of shooting a low-budget independent crime thriller in Lagos, Nigeria, over 12 days in February 2027. It focuses on critical regulatory, logistical, and security hurdles that must be cleared to operate safely and legally within the tight $85,000 USD budget.",
+                 "extracted_requirements":  [
+                                                "Total budget of 85,000 USD for a 12-day shoot in February 2027.",
+                                                "Locations required: Rooftop overlooking Lagos Island at dusk, Police station exterior, Nightclub interior, and Urban street scenes in Yaba and Surulere.",
+                                                "Night filming across multiple practical locations with no studio builds.",
+                                                "Small crew of 12-15 people requiring a local fixer and security detail.",
+                                                "Drone establishing shots over Lagos.",
+                                                "Foreign director requiring visa and equipment import clearance.",
+                                                "Assumption of a single local equipment rental vendor."
+                                            ],
+                 "missing_information":  [
+                                             "The nationality of the foreign director, which dictates specific visa fees, processing times, and bilateral requirements.",
+                                             "A detailed equipment list to evaluate whether local rental houses can supply it or if international shipping/temporary importation is mandatory.",
+                                             "The breakdown of the $85,000 USD budget, specifically the allocation for local fixer fees, security, and permits versus crew and gear.",
+                                             "A preliminary script page count or scene breakdown to realistically assess if a 12-day schedule is feasible for the requested setups.",
+                                             "Whether the production has secured general liability insurance that covers international filming and drone operations in Nigeria."
+                                         ],
+                 "tasks":  [
+                               {
+                                   "id":  "t1",
+                                   "category":  "PERMITS",
+                                   "question":  "What are the permit requirements, costs, and timelines for street filming, rooftop access, and drone operations in Lagos?",
+                                   "objective":  "A detailed guide on securing permits from the Lagos State Film and Video Censors Board (LSFVCB) and drone clearance from the Nigerian Civil Aviation Authority (NCAA), including costs and processing times.",
+                                   "search_queries":  [
+                                                          "Lagos State film permit requirements LSFVCB",
+                                                          "Nigeria NCAA drone permit commercial filming",
+                                                          "street filming permits Lagos Yaba Surulere"
+                                                      ],
+                                   "priority":  "CRITICAL",
+                                   "rationale":  "Filming on streets and operating drones in Lagos without official permits risks immediate shutdown, equipment confiscation, or arrest by local authorities."
+                               },
+                               {
+                                   "id":  "t2",
+                                   "category":  "LOGISTICS_ACCESS",
+                                   "question":  "What are the visa requirements for a foreign director and the regulations for temporary equipment importation into Nigeria?",
+                                   "objective":  "A clear breakdown of the Nigerian Temporary Work Permit (TWP) or Subject to Regularization (STR) visa process and the customs procedures for temporary equipment importation.",
+                                   "search_queries":  [
+                                                          "Nigeria temporary work permit visa film",
+                                                          "Nigeria customs temporary importation equipment carnet",
+                                                          "importing film gear Nigeria customs clearance"
+                                                      ],
+                                   "priority":  "CRITICAL",
+                                   "rationale":  "The director cannot legally work on-set without the correct visa, and importing specialized camera gear requires navigating complex Nigerian customs regulations to avoid costly delays."
+                               },
+                               {
+                                   "id":  "t3",
+                                   "category":  "SAFETY_SECURITY",
+                                   "question":  "What are the security protocols, costs, and best practices for night filming with a small crew in Yaba and Surulere?",
+                                   "objective":  "An assessment of security risks in Yaba and Surulere at night, alongside actionable steps and costs for hiring local security details such as the Mobile Police (MOPOL).",
+                                   "search_queries":  [
+                                                          "hiring MOPOL security film crew Lagos",
+                                                          "Lagos film production fixer security costs",
+                                                          "night filming safety Yaba Surulere Lagos"
+                                                      ],
+                                   "priority":  "HIGH",
+                                   "rationale":  "Night shoots in urban Lagos carry significant security risks that require professional local security coordination to protect the crew and equipment."
+                               },
+                               {
+                                   "id":  "t4",
+                                   "category":  "EQUIPMENT_VENDORS",
+                                   "question":  "What is the availability and estimated cost of hiring a single comprehensive equipment rental vendor in Lagos?",
+                                   "objective":  "A list of reputable local equipment rental houses in Lagos capable of supplying camera, lighting, and grip packages for a 12-day indie shoot, with estimated package rates.",
+                                   "search_queries":  [
+                                                          "camera equipment rental houses Lagos Nigeria",
+                                                          "film gear rental packages Lagos",
+                                                          "Nollywood camera lighting rental vendors"
+                                                      ],
+                                   "priority":  "HIGH",
+                                   "rationale":  "Relying on a single vendor is a major budget constraint; verifying local availability of industry-standard gear prevents expensive international shipping costs."
+                               },
+                               {
+                                   "id":  "t5",
+                                   "category":  "WEATHER",
+                                   "question":  "How will the February weather and the Harmattan dust haze in Lagos affect outdoor night filming and drone visibility?",
+                                   "objective":  "A historical weather analysis for Lagos in February, focusing on rain probability, temperatures, and the severity of the Harmattan dust on visibility and camera equipment.",
+                                   "search_queries":  [
+                                                          "Lagos weather February Harmattan visibility",
+                                                          "Lagos February average rainfall temperature",
+                                                          "Harmattan dust impact camera gear filming"
+                                                      ],
+                                   "priority":  "MEDIUM",
+                                   "rationale":  "February is during the dry season but is heavily impacted by the Harmattan dust haze, which can severely limit drone visibility, alter dusk lighting, and damage sensitive camera sensors."
+                               }
+                           ]
+             },
+    "search_results":  [
+                           {
+                               "task_id":  "t1",
+                               "category":  "PERMITS",
+                               "question":  "What are the permit requirements, costs, and timelines for street filming, rooftop access, and drone operations in Lagos?",
+                               "status":  "OK",
+                               "queries":  [
+                                               "Lagos State film permit requirements LSFVCB",
+                                               "Nigeria NCAA drone permit commercial filming",
+                                               "street filming permits Lagos Yaba Surulere"
+                                           ],
+                               "source_ids":  [
+                                                  "src_01",
+                                                  "src_02",
+                                                  "src_03",
+                                                  "src_04",
+                                                  "src_05"
+                                              ],
+                               "excerpt_count":  5,
+                               "latency_ms":  16120,
+                               "search_id":  "search_404dbff56ff738fb34d97444f25b8a82",
+                               "error":  null
+                           },
+                           {
+                               "task_id":  "t2",
+                               "category":  "LOGISTICS_ACCESS",
+                               "question":  "What are the visa requirements for a foreign director and the regulations for temporary equipment importation into Nigeria?",
+                               "status":  "OK",
+                               "queries":  [
+                                               "Nigeria temporary work permit visa film",
+                                               "Nigeria customs temporary importation equipment carnet",
+                                               "importing film gear Nigeria customs clearance"
+                                           ],
+                               "source_ids":  [
+                                                  "src_06",
+                                                  "src_07",
+                                                  "src_08",
+                                                  "src_09",
+                                                  "src_10"
+                                              ],
+                               "excerpt_count":  5,
+                               "latency_ms":  15891,
+                               "search_id":  "search_15d8700115c6d8d3e4779c6876a871c0",
+                               "error":  null
+                           },
+                           {
+                               "task_id":  "t3",
+                               "category":  "SAFETY_SECURITY",
+                               "question":  "What are the security protocols, costs, and best practices for night filming with a small crew in Yaba and Surulere?",
+                               "status":  "OK",
+                               "queries":  [
+                                               "hiring MOPOL security film crew Lagos",
+                                               "Lagos film production fixer security costs",
+                                               "night filming safety Yaba Surulere Lagos"
+                                           ],
+                               "source_ids":  [
+                                                  "src_11",
+                                                  "src_05",
+                                                  "src_12",
+                                                  "src_13",
+                                                  "src_14"
+                                              ],
+                               "excerpt_count":  5,
+                               "latency_ms":  15884,
+                               "search_id":  "search_73b90ff7768a5474c08b13b73aec9d30",
+                               "error":  null
+                           },
+                           {
+                               "task_id":  "t4",
+                               "category":  "EQUIPMENT_VENDORS",
+                               "question":  "What is the availability and estimated cost of hiring a single comprehensive equipment rental vendor in Lagos?",
+                               "status":  "OK",
+                               "queries":  [
+                                               "camera equipment rental houses Lagos Nigeria",
+                                               "film gear rental packages Lagos",
+                                               "Nollywood camera lighting rental vendors"
+                                           ],
+                               "source_ids":  [
+                                                  "src_15",
+                                                  "src_16",
+                                                  "src_17",
+                                                  "src_18",
+                                                  "src_19"
+                                              ],
+                               "excerpt_count":  5,
+                               "latency_ms":  16896,
+                               "search_id":  "search_09aef3e85f50eb54c51c185f663d2f35",
+                               "error":  null
+                           },
+                           {
+                               "task_id":  "t5",
+                               "category":  "WEATHER",
+                               "question":  "How will the February weather and the Harmattan dust haze in Lagos affect outdoor night filming and drone visibility?",
+                               "status":  "OK",
+                               "queries":  [
+                                               "Lagos weather February Harmattan visibility",
+                                               "Lagos February average rainfall temperature",
+                                               "Harmattan dust impact camera gear filming"
+                                           ],
+                               "source_ids":  [
+                                                  "src_20",
+                                                  "src_21",
+                                                  "src_22",
+                                                  "src_23",
+                                                  "src_24"
+                                              ],
+                               "excerpt_count":  5,
+                               "latency_ms":  16885,
+                               "search_id":  "search_ae0570dbbe0b615bf0058f4f45005085",
+                               "error":  null
+                           }
+                       ],
+    "sources":  [
+                    {
+                        "id":  "src_01",
+                        "url":  "https://atlasfilmfixers.com/regions-we-fix-in/filming-in-nigeria",
+                        "domain":  "atlasfilmfixers.com",
+                        "title":  "Filming In Nigeria: The Complete 2026 Guide To Easy ...",
+                        "publish_date":  "2026-08-06",
+                        "first_seen_task":  "t1"
+                    },
+                    {
+                        "id":  "src_02",
+                        "url":  "https://lsfvcb.lg.gov.ng/",
+                        "domain":  "lsfvcb.lg.gov.ng",
+                        "title":  "LSFVCB â A modern, government-standard digital platform ...",
+                        "publish_date":  "2026-03-27",
+                        "first_seen_task":  "t1"
+                    },
+                    {
+                        "id":  "src_03",
+                        "url":  "https://wikiprocedure.com/index.php/Nigeria_-_Apply_for_Film_shooting_permit",
+                        "domain":  "wikiprocedure.com",
+                        "title":  "Nigeria - Apply for Film shooting permit - Wikiprocedure",
+                        "publish_date":  "2025-05-01",
+                        "first_seen_task":  "t1"
+                    },
+                    {
+                        "id":  "src_04",
+                        "url":  "https://lsfvcb.lg.gov.ng/about",
+                        "domain":  "lsfvcb.lg.gov.ng",
+                        "title":  "About - LSFVCB",
+                        "publish_date":  "2026-03-27",
+                        "first_seen_task":  "t1"
+                    },
+                    {
+                        "id":  "src_05",
+                        "url":  "https://hoodlum.tv/where-we-work/film-production-support-in-nigeria",
+                        "domain":  "hoodlum.tv",
+                        "title":  "Filming in Nigeria | Lagos Crews, Visas \u0026 Local Fixers",
+                        "publish_date":  null,
+                        "first_seen_task":  "t1"
+                    },
+                    {
+                        "id":  "src_06",
+                        "url":  "https://twp.immigration.gov.ng/",
+                        "domain":  "twp.immigration.gov.ng",
+                        "title":  "Nigerian Immigration Service - Temporary Work Permit",
+                        "publish_date":  null,
+                        "first_seen_task":  "t2"
+                    },
+                    {
+                        "id":  "src_07",
+                        "url":  "https://trade.gov/country-commercial-guides/nigeria-temporary-entry",
+                        "domain":  "trade.gov",
+                        "title":  "Nigeria - Temporary Entry - International Trade Administration",
+                        "publish_date":  "2021-10-13",
+                        "first_seen_task":  "t2"
+                    },
+                    {
+                        "id":  "src_08",
+                        "url":  "https://africanfixer.tv/nigeria-filming-guide-2026",
+                        "domain":  "africanfixer.tv",
+                        "title":  "Filming in Nigeria â Complete Production Guide (2026) - African Fixer",
+                        "publish_date":  "2026-07-28",
+                        "first_seen_task":  "t2"
+                    },
+                    {
+                        "id":  "src_09",
+                        "url":  "https://immigration.gov.ng/temporary-work-permit",
+                        "domain":  "immigration.gov.ng",
+                        "title":  "TEMPORARY WORK PERMIT - Nigeria Immigration Service",
+                        "publish_date":  "2026-03-04",
+                        "first_seen_task":  "t2"
+                    },
+                    {
+                        "id":  "src_10",
+                        "url":  "http://niamey.foreignaffairs.gov.ng/visas/temporary-work-permit",
+                        "domain":  "niamey.foreignaffairs.gov.ng",
+                        "title":  "Temporary Work Permit â Embassy of Nigeria in Niamey, Niger",
+                        "publish_date":  null,
+                        "first_seen_task":  "t2"
+                    },
+                    {
+                        "id":  "src_11",
+                        "url":  "https://netafri.com/nigeria-personnel-security",
+                        "domain":  "netafri.com",
+                        "title":  "Hire Bodyguard in Nigeria | Personnel Security",
+                        "publish_date":  null,
+                        "first_seen_task":  "t3"
+                    },
+                    {
+                        "id":  "src_12",
+                        "url":  "https://screenglobalproduction.com/section/crew-hire-and-support-services/category/camera-crew-hire/country/nigeria/city/lagos",
+                        "domain":  "screenglobalproduction.com",
+                        "title":  "Camera Crew Hire in Lagos, Nigeria | Screen Global Production",
+                        "publish_date":  null,
+                        "first_seen_task":  "t3"
+                    },
+                    {
+                        "id":  "src_13",
+                        "url":  "https://worldproductionservice.com/media-production-in-nigeria",
+                        "domain":  "worldproductionservice.com",
+                        "title":  "Filming in Nigeria | Fixer \u0026 Camera Crew in Abuja | Video Production Service",
+                        "publish_date":  "2026-04-22",
+                        "first_seen_task":  "t3"
+                    },
+                    {
+                        "id":  "src_14",
+                        "url":  "https://ets-riskmanagement.com/areas-of-operation/nigeria",
+                        "domain":  "ets-riskmanagement.com",
+                        "title":  "Secure Transportation and Executive Protection in Nigeria | ETS",
+                        "publish_date":  null,
+                        "first_seen_task":  "t3"
+                    },
+                    {
+                        "id":  "src_15",
+                        "url":  "https://praxisng.com/rent-equipment-in-lagos",
+                        "domain":  "praxisng.com",
+                        "title":  "Camera Equipment Rental Agency in Lagos",
+                        "publish_date":  null,
+                        "first_seen_task":  "t4"
+                    },
+                    {
+                        "id":  "src_16",
+                        "url":  "https://spsmediang.com/renting",
+                        "domain":  "spsmediang.com",
+                        "title":  "Equipment Rental - Lagos Nigeria Video Production company, Documentary, Photography, corporate video, commercial,videographer,camera man, video producer, video equipment",
+                        "publish_date":  "2023-06-19",
+                        "first_seen_task":  "t4"
+                    },
+                    {
+                        "id":  "src_17",
+                        "url":  "https://rentalgear.com/lagos",
+                        "domain":  "rentalgear.com",
+                        "title":  "Lagos | RentalGear.com | Camera, Lens, Lighting, Grip, Audio",
+                        "publish_date":  null,
+                        "first_seen_task":  "t4"
+                    },
+                    {
+                        "id":  "src_18",
+                        "url":  "https://camerarentallagos.com/",
+                        "domain":  "camerarentallagos.com",
+                        "title":  "Camera Rental Lagos",
+                        "publish_date":  "2024-02-08",
+                        "first_seen_task":  "t4"
+                    },
+                    {
+                        "id":  "src_19",
+                        "url":  "https://rewindassociates.com/",
+                        "domain":  "rewindassociates.com",
+                        "title":  "Premium Film Equipment Rental Lagos Nigeria | Rewind Associates",
+                        "publish_date":  null,
+                        "first_seen_task":  "t4"
+                    },
+                    {
+                        "id":  "src_20",
+                        "url":  "https://weather-and-climate.com/lagos-pt-February-averages",
+                        "domain":  "weather-and-climate.com",
+                        "title":  "Lagos Weather in February: Temperature \u0026 Rainfall",
+                        "publish_date":  "2026-06-08",
+                        "first_seen_task":  "t5"
+                    },
+                    {
+                        "id":  "src_21",
+                        "url":  "https://rcflood.gov/lagos-weather-in-february",
+                        "domain":  "rcflood.gov",
+                        "title":  "9+ Lagos Weather in February: A Guide",
+                        "publish_date":  "2025-02-10",
+                        "first_seen_task":  "t5"
+                    },
+                    {
+                        "id":  "src_22",
+                        "url":  "https://weather-and-climate.com/lagos-ng-February-averages",
+                        "domain":  "weather-and-climate.com",
+                        "title":  "Lagos Weather in February: Temperature \u0026 Rainfall",
+                        "publish_date":  null,
+                        "first_seen_task":  "t5"
+                    },
+                    {
+                        "id":  "src_23",
+                        "url":  "https://weather-atlas.com/en/portugal/lagos-weather-february",
+                        "domain":  "weather-atlas.com",
+                        "title":  "February weather - Winter 2026 - Lagos, Portugal",
+                        "publish_date":  null,
+                        "first_seen_task":  "t5"
+                    },
+                    {
+                        "id":  "src_24",
+                        "url":  "https://thomascook.com/holidays/weather/portugal/algarve/lagos/february",
+                        "domain":  "thomascook.com",
+                        "title":  "Lagos Weather in February | Thomas Cook",
+                        "publish_date":  null,
+                        "first_seen_task":  "t5"
+                    }
+                ],
+    "evidence":  [
+                     {
+                         "id":  "e1",
+                         "task_id":  "t1",
+                         "category":  "PERMITS",
+                         "claim":  "The Lagos State Film and Video Censors Board is responsible for issuing film permits in Lagos.",
+                         "source_id":  "src_01",
+                         "excerpt":  "Who issues film permits in Nigeria? It depends on location: the Lagos State Film and Video Censors Board for Lagos, or the Nigerian Film",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e2",
+                         "task_id":  "t1",
+                         "category":  "PERMITS",
+                         "claim":  "The Lagos State Film and Video Censors Board provides digital applications for Film Permits and Film Registration.",
+                         "source_id":  "src_02",
+                         "excerpt":  "* [Film Permit](https://lsfvcb.lg.gov.ng/film-perm)\\n* [Film Registration](https://lsfvcb.lg.gov.ng/film-reg/)",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e3",
+                         "task_id":  "t1",
+                         "category":  "PERMITS",
+                         "claim":  "An in-person application for a Film Shooting Permit can be made at the Nigerian Film Corporation office.",
+                         "source_id":  "src_03",
+                         "excerpt":  "To apply for Film Shooting Permit in person, the applicant must visit the office of Nigerian Film Corporation.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e4",
+                         "task_id":  "t1",
+                         "category":  "REGULATION",
+                         "claim":  "The Lagos State Film and Video Censors Board is the statutory body for regulating, classifying, and licensing films within Lagos State.",
+                         "source_id":  "src_04",
+                         "excerpt":  "The Lagos State Film and Video Censors Board (LSFVCB) is the statutory body responsible for regulating, classifying, and licensing films and video works intended for public exhibition and distribution within Lagos State.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e5",
+                         "task_id":  "t1",
+                         "category":  "PERMITS",
+                         "claim":  "A permit from the Lagos State Film and Video Censor Board does not automatically cover interstate production or Abuja.",
+                         "source_id":  "src_05",
+                         "excerpt":  "A Lagos State Film and Video Censor Board permit may support a Lagos shoot, but it does not automatically cover Abuja or interstate production.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e6",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Nigeria is not part of the ATA Carnet system for temporary equipment importation.",
+                         "source_id":  "src_08",
+                         "excerpt":  "Nigeria is not part of the ATA Carnet system",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e7",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Temporary importation of production equipment into Nigeria is managed via a Temporary Importation Permit (TIP) issued by the Nigeria Customs Service.",
+                         "source_id":  "src_08",
+                         "excerpt":  "temporary import of production equipment is handled through a Temporary Importation Permit (TIP) issued by the Nigeria Customs Service.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e8",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "A confirmed airline return ticket is required to obtain a Temporary Work Permit (TWP) for Nigeria.",
+                         "source_id":  "src_10",
+                         "excerpt":  "Confirmed Airline Return ticket.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e9",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "An applicant for a Temporary Work Permit (TWP) must have an inviting organization or individual accept Immigration Responsibility (IR).",
+                         "source_id":  "src_10",
+                         "excerpt":  "Acceptance of IR (Immigration Responsibility) by inviting Organizations or individual.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e10",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "The Temporary Work Permit (TWP) is only obtainable from the Office of the Comptroller General of Immigration in the Nigerian Immigration Service.",
+                         "source_id":  "src_10",
+                         "excerpt":  "Obtainable only from the Office of the Comptroller General of Immigration in the Nigerian Immigration Service",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e11",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Temporary importation applications require brochures or technical manuals describing the items to be imported.",
+                         "source_id":  "src_07",
+                         "excerpt":  "Brochures and/or technical manuals describing the item(s) to be imported.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e12",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Temporary importation requires a photocopy of the complete contract between the importer and the main contractor, specifying the contract duration and the purpose of the imported equipment.",
+                         "source_id":  "src_07",
+                         "excerpt":  "Photocopy of the complete contract(s) between the importer and the main contractor, clearly indicating the duration of the contract and providing information about the purpose of the equipment to be temporary imported.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e13",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "An importer applying for temporary importation must provide a photocopy of their Tax Clearance Certificate covering three years.",
+                         "source_id":  "src_07",
+                         "excerpt":  "Photocopy of importerâs Tax Clearance Certificate for three years.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e14",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Applying for temporary importation requires a photocopy of the importer\u0027s Certificate of Incorporation.",
+                         "source_id":  "src_07",
+                         "excerpt":  "Photocopy of importerâs Certificate of Incorporation.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e15",
+                         "task_id":  "t2",
+                         "category":  "LOGISTICS_ACCESS",
+                         "claim":  "Temporary importation applications require an authorization letter from the importer addressed to Concessionary Logistics Limited stating the reasons for the import.",
+                         "source_id":  "src_07",
+                         "excerpt":  "Letter from importer addressed to Concessionary Logistics Limited authorizing the application for temporary importation on their behalf and stating the reasons for temporary importation.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e16",
+                         "task_id":  "t3",
+                         "category":  "SAFETY_SECURITY",
+                         "claim":  "Private security in Nigeria cannot legally be armed.",
+                         "source_id":  "src_11",
+                         "excerpt":  "No, private security in Nigeria cannot be armed.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e17",
+                         "task_id":  "t3",
+                         "category":  "SAFETY_SECURITY",
+                         "claim":  "It is legally mandated to use the Nigerian Mobile Police Force (MOPOL) for armed security services.",
+                         "source_id":  "src_11",
+                         "excerpt":  "It is legally mandated to use the Nigerian Mobile Police Force (MOPOL).",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e18",
+                         "task_id":  "t3",
+                         "category":  "SAFETY_SECURITY",
+                         "claim":  "Safety planning and authority liaison in Nigeria should be planned with a local team.",
+                         "source_id":  "src_05",
+                         "excerpt":  "Traffic, customs, location permissions, airport handling, safety planning and authority liaison should be planned with a local team.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e19",
+                         "task_id":  "t3",
+                         "category":  "SAFETY_SECURITY",
+                         "claim":  "An experienced security team accompanied by a reactive armed response capability (MOPOL) should be strongly considered during the hours of darkness.",
+                         "source_id":  "src_14",
+                         "excerpt":  "Having an experienced team of security specialists who are trained to navigate through challenging situations, accompanied by a reactive armed response capability (MOPOL) should strongly be considered, especially if traveling outside Lagos or during the hours of darkness.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e20",
+                         "task_id":  "t5",
+                         "category":  "WEATHER",
+                         "claim":  "The Harmattan, a dry and dusty northeasterly trade wind originating from the Sahara Desert, significantly influences the weather in Lagos during February.",
+                         "source_id":  "src_21",
+                         "excerpt":  "The harmattan, a dry, dusty northeasterly trade wind, significantly influences Lagos weather in February.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     },
+                     {
+                         "id":  "e21",
+                         "task_id":  "t5",
+                         "category":  "WEATHER",
+                         "claim":  "The Harmattan wind carries dust particles and dry air across West Africa, which impacts visibility, temperature, and humidity.",
+                         "source_id":  "src_21",
+                         "excerpt":  "Originating from the Sahara Desert, it carries dust particles and dry air across West Africa, impacting visibility, temperature, and humidity.",
+                         "confidence":  "HIGH",
+                         "retrieved_at":  "2026-09-08T04:50:34.536013+00:00"
+                     }
+                 ],
+    "verifications":  [
+                          {
+                              "evidence_id":  "e1",
+                              "status":  "VERIFIED",
+                              "corroborating_source_ids":  [
+                                                               "src_02",
+                                                               "src_04"
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "The claim is verified by official Lagos State government sources (src_02, src_04) which confirm the LSFVCB\u0027s role in issuing permits.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e2",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Directly supported by the official Lagos State Film and Video Censors Board website.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e3",
+                              "status":  "UNCONFIRMED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "This regulatory claim is sourced solely from a Tier 3 wiki database and lacks official or credible secondary corroboration.",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e4",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Directly supported by the official LSFVCB \u0027About\u0027 page.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e5",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by a professional production service company (Tier 2) operating in Nigeria.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e6",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by a professional production service company (Tier 2) specializing in African production logistics.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e7",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by a professional production service company (Tier 2) specializing in African production logistics.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e8",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official Nigerian Embassy portal (Tier 1).",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e9",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official Nigerian Embassy portal (Tier 1).",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e10",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official Nigerian Embassy portal (Tier 1).",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e11",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government trade portal (Tier 1).",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e12",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government trade portal (Tier 1).",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e13",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government trade portal (Tier 1).",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e14",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government trade portal (Tier 1).",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e15",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government trade portal (Tier 1).",
+                              "staleness_flag":  true
+                          },
+                          {
+                              "evidence_id":  "e16",
+                              "status":  "UNCONFIRMED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "This legal/regulatory claim is sourced solely from a Tier 3 personnel security website and lacks official or credible secondary corroboration.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e17",
+                              "status":  "UNCONFIRMED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "This legal/regulatory claim is sourced solely from a Tier 3 personnel security website and lacks official or credible secondary corroboration.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e18",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by a professional production service company (Tier 2) operating in Nigeria.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e19",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an established security risk management firm (Tier 2) operating in Nigeria.",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e20",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government flood control/weather portal (Tier 1).",
+                              "staleness_flag":  false
+                          },
+                          {
+                              "evidence_id":  "e21",
+                              "status":  "SUPPORTED",
+                              "corroborating_source_ids":  [
+
+                                                           ],
+                              "contradicting_source_ids":  [
+
+                                                           ],
+                              "reasoning":  "Supported by an official government flood control/weather portal (Tier 1).",
+                              "staleness_flag":  false
+                          }
+                      ],
+    "risks":  [
+                  {
+                      "id":  "r1",
+                      "title":  "Equipment Importation Barriers due to Non-ATA Carnet Status and Complex TIP Requirements",
+                      "severity":  "CRITICAL",
+                      "category":  "LOGISTICS_ACCESS",
+                      "reasoning":  "Nigeria is not a member of the ATA Carnet system. To temporarily import the foreign director\u0027s camera and equipment package, the production must obtain a Temporary Importation Permit (TIP) from the Nigeria Customs Service. This process requires a local importer with a Certificate of Incorporation, a three-year Tax Clearance Certificate, a formal contract, and technical brochures. Since this is a two-person foreign production company with no local office or legal team, they cannot meet these administrative requirements independently, risking equipment seizure or severe customs delays that would derail the 12-day shoot.",
+                      "evidence_ids":  [
+                                           "e6",
+                                           "e7",
+                                           "e11",
+                                           "e12",
+                                           "e13",
+                                           "e14",
+                                           "e15"
+                                       ],
+                      "recommended_action":  "Partner with an established local Lagos-based production services company to act as the importer of record and manage the TIP process, or source all camera, lighting, and grip equipment locally from a single Lagos-based rental vendor.",
+                      "requires_human_confirmation":  true
+                  },
+                  {
+                      "id":  "r2",
+                      "title":  "Director Visa and Temporary Work Permit (TWP) Sponsorship Requirements",
+                      "severity":  "HIGH",
+                      "category":  "LOGISTICS_ACCESS",
+                      "reasoning":  "The director is traveling from abroad and legally requires a Temporary Work Permit (TWP) to shoot the film. Obtaining a TWP requires a local inviting organization or individual in Nigeria to formally accept \u0027Immigration Responsibility\u0027 (IR). Because the production company consists of only two people with no local office or legal representation, they lack the corporate structure to sponsor this visa, which could lead to entry denial or legal penalties if the director attempts to work on a standard tourist visa.",
+                      "evidence_ids":  [
+                                           "e8",
+                                           "e9",
+                                           "e10"
+                                       ],
+                      "recommended_action":  "Contract a registered local Nigerian production fixer or agency to formally sponsor the director\u0027s TWP and assume Immigration Responsibility.",
+                      "requires_human_confirmation":  true
+                  },
+                  {
+                      "id":  "r3",
+                      "title":  "Security Vulnerabilities During Night Shoots in Yaba and Surulere",
+                      "severity":  "HIGH",
+                      "category":  "SAFETY_SECURITY",
+                      "reasoning":  "The production requires extensive night filming across multiple practical urban locations (Yaba, Surulere, and street scenes) with a small crew of 12-15 people. Security guidelines for Lagos strongly advise having an experienced security team accompanied by a reactive armed response capability (MOPOL) during the hours of darkness. Operating without professional security and armed police escorts at night exposes the crew and equipment to high risks of street harassment, extortion, or theft.",
+                      "evidence_ids":  [
+                                           "e18",
+                                           "e19"
+                                       ],
+                      "recommended_action":  "Hire a professional local security firm that coordinates directly with the Nigerian Mobile Police Force (MOPOL) to provide dedicated armed escorts for all night shoots.",
+                      "requires_human_confirmation":  true
+                  },
+                  {
+                      "id":  "r4",
+                      "title":  "Permit Delays for Street and Police Station Shoots",
+                      "severity":  "HIGH",
+                      "category":  "PERMITS",
+                      "reasoning":  "Filming street scenes and police station exteriors in Lagos requires official permits and registration from the Lagos State Film and Video Censors Board (LSFVCB). With a tight 12-day schedule and no local production office, any administrative delay in securing these permits online or in person will immediately disrupt the shoot. Additionally, shooting without these permits risks immediate shutdown by local authorities.",
+                      "evidence_ids":  [
+                                           "e1",
+                                           "e2",
+                                           "e4"
+                                       ],
+                      "recommended_action":  "Submit digital applications for the Film Permit and Film Registration on the LSFVCB portal immediately, and employ a local fixer to expedite the process and handle on-the-ground community liaisons.",
+                      "requires_human_confirmation":  true
+                  },
+                  {
+                      "id":  "r5",
+                      "title":  "Harmattan Dust Haze Impacting Dusk and Drone Cinematography",
+                      "severity":  "MEDIUM",
+                      "category":  "WEATHER",
+                      "reasoning":  "In February, Lagos weather is heavily influenced by the Harmattan, a dry, dusty wind originating from the Sahara Desert. This wind carries fine dust particles that significantly reduce visibility and create a persistent haze. This will directly interfere with the required rooftop dusk shots overlooking Lagos Island and drone establishing shots, while the dry, dusty air poses a physical risk to camera sensors, lenses, and drone motors.",
+                      "evidence_ids":  [
+                                           "e20",
+                                           "e21"
+                                       ],
+                      "recommended_action":  "Equip the camera department with specialized dust-protection gear, schedule the rooftop and drone shoots early in the schedule to allow for weather flexibility, and prepare alternative close-up coverage options in case visibility is too poor.",
+                      "requires_human_confirmation":  false
+                  }
+              ],
+    "gaps":  [
+                 {
+                     "id":  "g1",
+                     "question":  "What are the specific licensing, permit, and flight clearance requirements for operating a commercial drone over Lagos Island?",
+                     "why_it_matters":  "The production brief requires drone establishing shots over the city, but the retrieved evidence does not cover drone regulations, flight restrictions, or the process for obtaining aerial filming clearance in Nigeria.",
+                     "suggested_source":  "Nigerian Civil Aviation Authority (NCAA) and a licensed local drone operator."
+                 },
+                 {
+                     "id":  "g2",
+                     "question":  "Are private security guards legally prohibited from carrying firearms in Nigeria, and is the use of the Nigerian Mobile Police Force (MOPOL) legally mandated for armed security?",
+                     "why_it_matters":  "Claims e16 and e17 state that private security cannot be armed and that MOPOL is legally mandated, but these claims are unconfirmed (Tier 3 source). The production must verify this to ensure they do not hire an illegal security setup, which would create severe legal and safety liabilities.",
+                     "suggested_source":  "Nigerian Police Force (NPF) headquarters or a qualified Nigerian legal professional."
+                 },
+                 {
+                     "id":  "g3",
+                     "question":  "Is a permit from the Nigerian Film Corporation (NFC) required in addition to the Lagos State Film and Video Censors Board (LSFVCB) permit for filming in Lagos?",
+                     "why_it_matters":  "Claim e3 suggests that an in-person application for a Film Shooting Permit can be made at the NFC, but this is unconfirmed. The production needs to clarify if federal (NFC) permits are required alongside state (LSFVCB) permits to avoid jurisdictional conflicts during street shoots.",
+                     "suggested_source":  "Lagos State Film and Video Censors Board (LSFVCB) and the Nigerian Film Corporation (NFC)."
+                 }
+             ],
+    "recommendations":  [
+                            {
+                                "id":  "a1",
+                                "priority":  "CRITICAL",
+                                "action":  "Contract an established Lagos-based production services company to act as the importer of record for a Temporary Importation Permit (TIP), or formally transition the technical package to a 100% locally sourced rental agreement with a single Lagos-based vendor.",
+                                "rationale":  "Nigeria is not an ATA Carnet member. Importing the foreign director\u0027s camera package requires a TIP, which can only be obtained by a registered local entity with a three-year Tax Clearance Certificate. Sourcing locally or using a local partner prevents customs seizure and delays that would ruin the 12-day schedule.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "Producer"
+                            },
+                            {
+                                "id":  "a2",
+                                "priority":  "HIGH",
+                                "action":  "Retain a registered Nigerian production fixer or agency to formally sponsor the foreign director\u0027s Temporary Work Permit (TWP) and assume legal \u0027Immigration Responsibility\u0027.",
+                                "rationale":  "The director cannot legally work on a standard tourist visa. Because the two-person production company lacks a local corporate presence, a registered local partner must sponsor the TWP to avoid entry denial or deportation.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "Producer"
+                            },
+                            {
+                                "id":  "a3",
+                                "priority":  "HIGH",
+                                "action":  "Hire a professional local security firm to coordinate directly with the Nigerian Mobile Police Force (MOPOL) for dedicated armed escorts during night shoots in Yaba and Surulere, and verify that the security provider is legally authorized to deploy MOPOL.",
+                                "rationale":  "Night shoots in urban Lagos present high security risks. Private security guards in Nigeria are legally prohibited from carrying firearms, making a coordinated MOPOL escort the only legal and effective way to secure the crew and equipment.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "Line producer"
+                            },
+                            {
+                                "id":  "a4",
+                                "priority":  "HIGH",
+                                "action":  "Submit digital applications for the Film Permit and Film Registration on the Lagos State Film and Video Censors Board (LSFVCB) portal, and have the local fixer contact both LSFVCB and the Nigerian Film Corporation (NFC) to clarify if federal-level permits are also required.",
+                                "rationale":  "Filming street scenes and police station exteriors requires LSFVCB permits. Clarifying the jurisdictional overlap between state (LSFVCB) and federal (NFC) authorities before shooting prevents administrative shutdowns by local authorities.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "Location manager"
+                            },
+                            {
+                                "id":  "a5",
+                                "priority":  "HIGH",
+                                "action":  "Contact the Nigerian Civil Aviation Authority (NCAA) to obtain commercial drone flight clearance over Lagos Island, or contract a locally licensed, NCAA-certified drone operator to execute the establishing shots.",
+                                "rationale":  "Operating a commercial drone over Lagos Island without NCAA clearance is illegal and carries severe penalties, including equipment confiscation. Hiring a pre-certified local operator is the fastest way to mitigate this risk.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "Line producer"
+                            },
+                            {
+                                "id":  "a6",
+                                "priority":  "MEDIUM",
+                                "action":  "Schedule the rooftop dusk shots and drone establishing shots during the first three days of the shoot, equip the camera department with specialized dust-protection covers and cleaning kits, and prepare alternative close-up coverage options.",
+                                "rationale":  "February\u0027s Harmattan winds bring heavy dust haze that severely limits visibility for wide dusk and aerial shots, while posing a physical hazard to camera sensors and drone motors. Front-loading these scenes provides scheduling flexibility.",
+                                "related_risk_ids":  [
+
+                                                     ],
+                                "owner_hint":  "1st AD"
+                            }
+                        ],
+    "assessment":  {
+                       "readiness_score":  54,
+                       "evidence_confidence":  67,
+                       "research_coverage":  100,
+                       "critical_risks":  1,
+                       "high_risks":  3,
+                       "medium_risks":  1,
+                       "low_risks":  0,
+                       "research_gaps":  3,
+                       "verified_sources":  1,
+                       "total_sources":  24,
+                       "total_evidence":  21,
+                       "conflicting_findings":  0,
+                       "components":  [
+                                          {
+                                              "name":  "Research coverage",
+                                              "detail":  "5 of 5 research tasks returned usable results.",
+                                              "points":  25.0,
+                                              "max_points":  25.0
+                                          },
+                                          {
+                                              "name":  "Evidence confidence",
+                                              "detail":  "21 claims gathered, 1 independently verified.",
+                                              "points":  16.6,
+                                              "max_points":  25.0
+                                          },
+                                          {
+                                              "name":  "Risk exposure",
+                                              "detail":  "1 critical, 3 high, 1 medium, 0 low (-31.0 points).",
+                                              "points":  0.0,
+                                              "max_points":  30.0
+                                          },
+                                          {
+                                              "name":  "Source depth",
+                                              "detail":  "24 sources across 22 independent domains (target 10).",
+                                              "points":  10.0,
+                                              "max_points":  10.0
+                                          },
+                                          {
+                                              "name":  "Open questions",
+                                              "detail":  "3 unresolved research gaps (-7.5 points).",
+                                              "points":  2.5,
+                                              "max_points":  10.0
+                                          }
+                                      ],
+                       "methodology_note":  "Readiness = research coverage (25) + evidence confidence (25) + risk exposure (30) + source depth (10) + open gaps (10). Risk exposure starts at 30 and deducts 10 per critical, 6 per high, 3 per medium and 1 per low risk. Open gaps start at 10 and deduct 2.5 each. Evidence confidence weights every claim by its verification status (verified 1.0, supported 0.75, unconfirmed 0.35, conflicting 0.25, insufficient 0.1) and by its stated confidence. If no evidence was gathered at all, the risk and open-question components score zero rather than full marks: absence of evidence is not evidence of safety. Computed in code, not by a model."
+                   },
+    "report":  {
+                   "executive_summary":  "The current research indicates that proceeding with the 12-day shoot in Lagos is highly risky and not recommended under your current setup, as a 54% production readiness score reflects severe regulatory and logistical barriers. Decisive factors include Nigeria\u0027s non-ATA Carnet status, which complicates importing foreign equipment, and the legal requirement for a local sponsor to secure the director\u0027s Temporary Work Permit. Furthermore, while local permits and armed security (MOPOL) are mandatory for night shoots, the exact jurisdictional overlap between state and federal film boards remains unproven. To make this shoot viable, you must pivot from an independent foreign setup to a fully integrated partnership with an established Lagos-based production services company.",
+                   "opportunities":  [
+
+                                     ],
+                   "critical_risks_summary":  "The production faces immediate shutdown or equipment seizure due to complex Temporary Importation Permit (TIP) requirements for foreign gear and the lack of a local sponsor for the director\u0027s work visa. Additionally, conducting night shoots in Yaba and Surulere without legally mandated, armed Mobile Police (MOPOL) escorts poses a critical safety threat to your 12-15 person crew.",
+                   "open_questions":  [
+                                          "What are the specific licensing, permit, and flight clearance requirements for operating a commercial drone over Lagos Island?",
+                                          "Are private security guards legally prohibited from carrying firearms in Nigeria, and is the use of the Nigerian Mobile Police Force (MOPOL) legally mandated for armed security?",
+                                          "Is a permit from the Nigerian Film Corporation (NFC) required in addition to the Lagos State Film and Video Censors Board (LSFVCB) permit for filming in Lagos?"
+                                      ],
+                   "next_steps":  [
+                                      "Contract an established Lagos-based production services company to act as the local partner, handle the director\u0027s Temporary Work Permit (TWP) sponsorship, and serve as the importer of record.",
+                                      "Decide whether to source 100% of the camera and grip package from a single Lagos-based rental vendor to bypass the complex Temporary Importation Permit (TIP) process entirely.",
+                                      "Retain a professional local security firm to secure dedicated Nigerian Mobile Police Force (MOPOL) armed escorts for all scheduled night shoots in Yaba and Surulere.",
+                                      "Submit digital applications for the Film Permit and Film Registration on the Lagos State Film and Video Censors Board (LSFVCB) portal, and have the local partner clarify federal NFC permit requirements.",
+                                      "Engage a locally licensed, NCAA-certified drone operator to secure the necessary flight clearances and execute the Lagos Island establishing shots.",
+                                      "Adjust the shooting schedule to front-load rooftop and drone shots during the first three days to mitigate potential Harmattan dust haze visibility issues."
+                                  ]
+               },
+    "runs":  [
+                 {
+                     "stage":  "brief",
+                     "label":  "Understanding production brief",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:49:14.677703Z",
+                     "finished_at":  "2026-09-08T04:49:30.308928Z",
+                     "duration_ms":  15631,
+                     "detail":  ""
+                 },
+                 {
+                     "stage":  "research",
+                     "label":  "Searching external sources",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:49:30.308928Z",
+                     "finished_at":  "2026-09-08T04:49:47.424422Z",
+                     "duration_ms":  17115,
+                     "detail":  "sources: 24, domains: 22, tasks: 5, failed_tasks: 0, excerpts: 25"
+                 },
+                 {
+                     "stage":  "evidence",
+                     "label":  "Analysing evidence",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:49:47.427430Z",
+                     "finished_at":  "2026-09-08T04:50:34.542004Z",
+                     "duration_ms":  47114,
+                     "detail":  "claims: 21, dropped: 0, failed_tasks: 0"
+                 },
+                 {
+                     "stage":  "verification",
+                     "label":  "Cross-checking information",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:50:34.543005Z",
+                     "finished_at":  "2026-09-08T04:51:01.768621Z",
+                     "duration_ms":  27225,
+                     "detail":  "statuses: {\u0027VERIFIED\u0027: 1, \u0027SUPPORTED\u0027: 17, \u0027UNCONFIRMED\u0027: 3}"
+                 },
+                 {
+                     "stage":  "risk",
+                     "label":  "Assessing risks",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:51:01.768621Z",
+                     "finished_at":  "2026-09-08T04:51:30.009764Z",
+                     "duration_ms":  28241,
+                     "detail":  "risks: 5, critical: 1, gaps: 3"
+                 },
+                 {
+                     "stage":  "scoring",
+                     "label":  "Computing readiness",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:51:30.011764Z",
+                     "finished_at":  "2026-09-08T04:51:30.017836Z",
+                     "duration_ms":  6,
+                     "detail":  "readiness: 54, confidence: 67, coverage: 100"
+                 },
+                 {
+                     "stage":  "recommendation",
+                     "label":  "Preparing recommendations",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:51:30.022432Z",
+                     "finished_at":  "2026-09-08T04:51:39.464702Z",
+                     "duration_ms":  9442,
+                     "detail":  "recommendations: 6"
+                 },
+                 {
+                     "stage":  "report",
+                     "label":  "Preparing production report",
+                     "status":  "OK",
+                     "started_at":  "2026-09-08T04:51:39.465579Z",
+                     "finished_at":  "2026-09-08T04:51:47.708596Z",
+                     "duration_ms":  8243,
+                     "detail":  ""
+                 }
+             ],
+    "warnings":  [
+
+                 ]
+}

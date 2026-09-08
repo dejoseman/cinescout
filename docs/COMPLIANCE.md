@@ -11,7 +11,7 @@ Status legend: **PASS** verified in this repo - **ACTION** requires an operator 
 | 4 | Gemini usage | **PASS** | `gemini-3.6-flash` (GA) default, chosen for availability after 3.7-flash returned sustained 503s on 2026-09-02; `GEMINI_REASONING_MODEL` may raise heavy stages to `gemini-3.1-pro-preview`. |
 | 5 | Agent Builder / Agent Platform / ADK usage | **PASS** | Google ADK 2.7 `SequentialAgent` + `LlmAgent` + custom `BaseAgent` in `backend/app/agents/`. ADK is the primary and only orchestration layer. |
 | 6 | Parallel runtime integration | **PASS** | `backend/app/integrations/parallel_client.py` performs live `POST https://api.parallel.ai/v1/search`. The pipeline cannot complete without it. |
-| 7 | Partner calls actually execute | **PASS** | Verified live on **2026-09-02**. Parallel returned 6 sources in 1.4s (`search_id: search_3ffea017...`); Gemini `gemini-3.7-flash` returned structured JSON. Log: [`proof/integration-verification.txt`](../proof/integration-verification.txt). |
+| 7 | Partner calls actually execute | **PASS** | Verified live on **2026-09-08**. Parallel returned 5 sources in 1.4s; Gemini `gemini-3.5-flash` returned structured JSON. Log: [`proof/integration-verification-2026-09-08.txt`](../proof/integration-verification-2026-09-08.txt). |
 | 8 | No prohibited AI providers | **PASS** | Verified by `scripts/check_dependencies.py`, which scans requirements, the frontend manifest and the installed environment. Last run: PASS. |
 | 9 | Public repository | **ACTION** | Push to a public remote before the deadline. |
 | 10 | OSI-approved licence at repo root | **PASS** | `LICENSE` - Apache License 2.0. |
@@ -40,10 +40,10 @@ Status legend: **PASS** verified in this repo - **ACTION** requires an operator 
 - **The frontend typechecks and builds** (`tsc --noEmit`, `vite build`).
 - **The API and the compiled SPA were served and exercised in a browser**: dashboard, brief
   form and the demo prefill all render and function.
-- **Both partner integrations verified live on 2026-09-02** against the real APIs, with the
-  output kept in `proof/integration-verification.txt`.
-- **Still unverified:** a full eight-stage pipeline run end to end against live data, the
-  container image build, and the deployed Cloud Run service. These are Phases 3 and 4.
+- **Both partner integrations verified live on 2026-09-08** against the real APIs, with the
+  output kept in `proof/integration-verification-2026-09-08.txt`.
+- **A full eight-stage pipeline run** end-to-end against live data was verified on 2026-09-08 with the Lagos "Shadow District" demo brief. The pipeline completed successfully and the payload is saved in `proof/lagos-run-live-2026-09-08.json`.
+- **Still unverified:** the container image build, and the deployed Cloud Run service.
 
 ## Honest-claims policy
 

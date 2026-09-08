@@ -53,14 +53,13 @@ from .validators import (
 logger = logging.getLogger(__name__)
 
 #: Low temperature: this is an analysis system, not a creative one.
-#: ``thinking_level="low"`` is a deliberate latency decision. Every stage is
-#: given its full context and a tightly specified output schema, so extended
-#: deliberation buys little here but costs seconds on every one of six calls -
-#: and the whole run has to finish inside a three-minute demo.
+#: Thinking is deliberately disabled: it is incompatible with some models in
+#: the fallback chain (e.g. gemini-3.1-flash-lite) and was observed to produce
+#: empty responses on structured-output calls, triggering ADK's
+#: "model output must contain either output text or tool calls" error.
 GENERATION_CONFIG = types.GenerateContentConfig(
     temperature=0.2,
     top_p=0.9,
-    thinking_config=types.ThinkingConfig(thinking_level="low"),
 )
 
 
