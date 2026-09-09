@@ -9,6 +9,8 @@ brief into an evidence-backed feasibility decision.
 
 Google Gemini reasons · Google ADK orchestrates · Parallel Search retrieves the live web
 
+▶️ **[Watch the 3-minute demo](https://youtu.be/sXap5aZjbl4)**
+
 </div>
 
 ---
@@ -290,6 +292,8 @@ stays on free-tier metering. Then either raise `GEMINI_MAX_RPM` or point
 ---
 
 ## Demo flow
+
+▶️ **[Watch the 3-minute demo](https://youtu.be/sXap5aZjbl4)**
 
 Full script and timing: **[docs/DEMO.md](docs/DEMO.md)**
 

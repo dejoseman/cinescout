@@ -1,5 +1,7 @@
 # CineScout — 3-Minute Demonstration Plan
 
+▶️ **[Watch the recorded demo](https://youtu.be/sXap5aZjbl4)**
+
 The demo is a single uninterrupted end-to-end run. Nothing is pre-rendered, scripted, or mocked.
 
 ## Demo brief (seeded, one-click prefill)
